@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>प्लगइन <white><time></white>ms में सफलतापूर्वक पुनः लोड हो गया!"
+
+place:
+  success: "<green>नया <type> मिनियन सफलतापूर्वक रखा गया! <gray>(<placed>/<max>)"
+  limit-reached: "<red>मिनियन नहीं रखा जा सका! आप सीमा तक पहुँच गए हैं! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>मिनियन नहीं रखा जा सका! इस स्थान पर पहले से एक मिनियन है!"
+  missing-permission: "<red>आपको यह मिनियन रखने की अनुमति नहीं है!"
+  island-limit-reached: "<red>आप द्वीप मिनियन सीमा तक पहुँच गए हैं! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>मिनियन सफलतापूर्वक उठाया गया! <gray>(<placed>/<max>)"
+  with-tool: "<green>मिनियन अपने अंदर उपकरण सहित उठाया गया!"
+  without-tool: "<green>मिनियन उठाया गया! उपकरण अलग से आपकी इन्वेंट्री में वापस कर दिया गया।"
+
+errors:
+  inventory-full: "<red>आपकी इन्वेंट्री में पर्याप्त जगह नहीं है! पहले कुछ जगह खाली करें!"
+  give-max-level: "<red>इस मिनियन का अधिकतम स्तर <max_level> है! आपने <level> सेट करने का प्रयास किया।"
+
+convert:
+  start: "<green>डेटा रूपांतरण शुरू हो रहा है..."
+  finish: "<green>डेटा रूपांतरण सफलतापूर्वक पूरा हुआ!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>आपको मिनियन को एक कंटेनर से जोड़ना होगा </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>मिनियन को एक उपकरण की आवश्यकता है </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>मिनियन को पास में पानी की आवश्यकता है </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>इस मिनियन का कंटेनर भरा हुआ है </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>मिनियन का चार्ज समाप्त हो गया! पुनः चार्ज करें!</#FFAAAA>⚠"
+
+time:
+  day: "दि"
+  hour: "घं"
+  minute: "मि"
+  second: "से"
+
+statistics: "<white>सक्रिय मिनियन: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>निष्क्रिय मिनियन: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>कुल: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>मिनियन सफलतापूर्वक स्तर <white><level></white> तक अपग्रेड हो गया!"
+  limit-reached: "<red>यह मिनियन पहले ही अधिकतम स्तर पर पहुँच चुका है!"
+  fail: "<red>इस अपग्रेड के लिए पर्याप्त क्रियाएँ या पैसे नहीं हैं!"
+
+link:
+  success: "<green>मिनियन सफलतापूर्वक कंटेनर से जुड़ गया!"
+  unlink: "<green>आपने मिनियन का लिंक हटा दिया।"
+  fail: "<red>इस ब्लॉक से नहीं जोड़ा जा सकता! यह बहुत दूर है या कंटेनर नहीं है!"
+  start: "<green>लिंकिंग शुरू! किसी कंटेनर पर क्लिक करें!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>आपका मिनियन मेनू मोड <aqua><mode></aqua> पर सेट किया गया!"
+  mode-bedrock: "<yellow>आप Bedrock/Geyser पर खेल रहे हैं — संगतता के लिए क्लासिक GUI मेनू रखा गया है।"
+  mode-old-client: "<yellow>आपका क्लाइंट या सर्वर वर्तमान में केवल क्लासिक मेनू (GUI) का उपयोग करता है।"
+
+skills:
+  upgraded: "<green>आपने <skill> <green>को टियर <white><tier>/<max_tier></white> पर अपग्रेड किया!"
+  no-points: "<red>पर्याप्त अंक नहीं! आवश्यक <white><cost></white>, उपलब्ध <white><available></white>।"
+  max-tier: "<yellow>यह कौशल पहले से ही अधिकतम टियर पर है!"
+  locked-level: "<red>इस शक्ति को अनलॉक करने के लिए मिनियन का स्तर <white><level></white> होना आवश्यक है!"
+  respec-success: "<green>रीसेट पूर्ण! <white><points></white> अंक वापस किए गए।"
+  respec-fail-money: "<red>अंक रीसेट करने के लिए पर्याप्त धन नहीं! शुल्क: <white><cost>$</white>।"
+  nothing-to-respec: "<yellow>इस मिनियन में अभी कोई निवेशित अंक नहीं हैं!"
+
+directions:
+  north: "उत्तर"
+  east: "पूर्व"
+  south: "दक्षिण"
+  west: "पश्चिम"
+
+charge:
+  charge: "<green>आपने अपने मिनियन में <white>30 मिनट</white> का चार्ज जोड़ा!"
+  not-enough-money: "<red>इस मिनियन को चार्ज करने के लिए पर्याप्त पैसे नहीं हैं!"
+  not-enough-time-passed: "<red>आपका मिनियन लगभग पूरा चार्ज है! थोड़ी देर प्रतीक्षा करें!"
+
+tools:
+  wrong-tool: "<red>आप इस आइटम को इस मिनियन के उपकरण के रूप में नहीं रख सकते!"
+  stored-lore: "<gray>सहेजा गया उपकरण: <white><tool>"
+
+tool-names:
+  "none": "कोई नहीं"
+  "wooden sword": "लकड़ी की तलवार"
+  "wooden pickaxe": "लकड़ी की गैंती"
+  "wooden axe": "लकड़ी की कुल्हाड़ी"
+  "wooden hoe": "लकड़ी की कुदाल"
+  "wooden shovel": "लकड़ी की फावड़ा"
+  "copper sword": "तांबे की तलवार"
+  "copper pickaxe": "तांबे की कुदाल"
+  "copper axe": "तांबे की कुल्हाड़ी"
+  "copper hoe": "तांबे का फावड़ा"
+  "copper shovel": "तांबे का बेलचा"
+  "stone sword": "पत्थर की तलवार"
+  "stone pickaxe": "पत्थर की गैंती"
+  "stone axe": "पत्थर की कुल्हाड़ी"
+  "stone hoe": "पत्थर की कुदाल"
+  "stone shovel": "पत्थर की फावड़ा"
+  "iron sword": "लोहे की तलवार"
+  "iron pickaxe": "लोहे की गैंती"
+  "iron axe": "लोहे की कुल्हाड़ी"
+  "iron hoe": "लोहे की कुदाल"
+  "iron shovel": "लोहे की फावड़ा"
+  "golden sword": "सोने की तलवार"
+  "golden pickaxe": "सोने की गैंती"
+  "golden axe": "सोने की कुल्हाड़ी"
+  "golden hoe": "सोने की कुदाल"
+  "golden shovel": "सोने की फावड़ा"
+  "diamond sword": "हीरे की तलवार"
+  "diamond pickaxe": "हीरे की गैंती"
+  "diamond axe": "हीरे की कुल्हाड़ी"
+  "diamond hoe": "हीरे की कुदाल"
+  "diamond shovel": "हीरे की फावड़ा"
+  "netherite sword": "नेदराइट की तलवार"
+  "netherite pickaxe": "नेदराइट की गैंती"
+  "netherite axe": "नेदराइट की कुल्हाड़ी"
+  "netherite hoe": "नेदराइट की कुदाल"
+  "netherite shovel": "नेदराइट की फावड़ा"
+  "fishing rod": "मछली पकड़ने की छड़ी"
+  "shears": "कैंची"
+  "ender eye": "एंडर की आँख"
+  "blaze rod": "ब्लेज़ रॉड"
+  "bow": "धनुष"
+  "crossbow": "क्रॉसबो"
+  "trident": "त्रिशूल"
+  "mace": "गदा"
+  "stick": "छड़ी"
+
+reset: "<green>आपने <player> के मिनियन की गिनती रीसेट कर दी!"
+not-on-island: "<#FF0000>आप वर्तमान में किसी द्वीप पर नहीं हैं!"
+slot-give: "<green>आपने <player> को <amount> द्वीप मिनियन स्लॉट दिए!"
+slot-receive: "<green>आपको <amount> नए द्वीप मिनियन स्लॉट मिले! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

@@ -9,6 +9,8 @@ import com.artillexstudios.axminions.api.utils.MinionUtils
 import com.artillexstudios.axminions.api.utils.fastFor
 import com.artillexstudios.axminions.api.warnings.Warnings
 import com.artillexstudios.axminions.minions.MinionTicker
+import com.artillexstudios.axminions.nms.NMSHandler
+import com.artillexstudios.axminions.skills.AbilityEngine
 import com.artillexstudios.axminions.utils.Enchantments
 import dev.lone.itemsadder.api.CustomBlock
 import org.bukkit.Bukkit
@@ -27,10 +29,10 @@ class FarmerMinionType : MinionType("farmer", AxMinionsPlugin.INSTANCE.getResour
 
     override fun onToolDirty(minion: Minion) {
         val minionImpl = minion as com.artillexstudios.axminions.minions.Minion
-        minionImpl.setRange(getDouble("range", minion.getLevel()))
+        minionImpl.setRange(minion.getEffectiveRange())
         val tool = Enchantments.EFFICIENCY?.let { minion.getTool()?.getEnchantmentLevel(it)?.div(10.0) } ?: 0.1
         val efficiency = 1.0 - if (tool > 0.9) 0.9 else tool
-        minionImpl.setNextAction((getLong("speed", minion.getLevel()) * efficiency).roundToInt())
+        minionImpl.setNextAction((minion.getEffectiveSpeed() * efficiency).roundToInt().coerceAtLeast(10))
     }
 
     override fun run(minion: Minion) {
@@ -104,7 +106,7 @@ class FarmerMinionType : MinionType("farmer", AxMinionsPlugin.INSTANCE.getResour
                     Bukkit.getPluginManager().callEvent(preHarvestEvent)
                     if (preHarvestEvent.isCancelled) return@fastFor
                     MinionUtils.getPlant(block).fastFor {
-                        val blockDrops = it.getDrops(minion.getTool())
+                        val blockDrops = NMSHandler.get().getDrops(it, minion.getTool() ?: ItemStack(Material.AIR))
                         size++
                         drops.addAll(blockDrops)
                         it.type = Material.AIR
@@ -115,7 +117,7 @@ class FarmerMinionType : MinionType("farmer", AxMinionsPlugin.INSTANCE.getResour
                     val preHarvestEvent = PreFarmerMinionHarvestEvent(minion, block)
                     Bukkit.getPluginManager().callEvent(preHarvestEvent)
                     if (preHarvestEvent.isCancelled) return@fastFor
-                    val blockDrops = block.getDrops(minion.getTool())
+                    val blockDrops = NMSHandler.get().getDrops(block, minion.getTool() ?: ItemStack(Material.AIR))
                     size++
                     drops.addAll(blockDrops)
                     block.type = Material.AIR
@@ -127,7 +129,7 @@ class FarmerMinionType : MinionType("farmer", AxMinionsPlugin.INSTANCE.getResour
                     val preHarvestEvent = PreFarmerMinionHarvestEvent(minion, block)
                     Bukkit.getPluginManager().callEvent(preHarvestEvent)
                     if (preHarvestEvent.isCancelled) return@fastFor
-                    val blockDrops = block.getDrops(minion.getTool())
+                    val blockDrops = NMSHandler.get().getDrops(block, minion.getTool() ?: ItemStack(Material.AIR))
                     size++
                     drops.addAll(blockDrops)
                     ageable.age = 0
@@ -151,8 +153,13 @@ class FarmerMinionType : MinionType("farmer", AxMinionsPlugin.INSTANCE.getResour
             }
         }
 
+        val outcome = AbilityEngine.processActionDrops(minion, drops)
         minion.addToContainerOrDrop(drops)
-        minion.damageTool(size)
+        AbilityEngine.compactChestForCandidates(minion, outcome.compactCandidates)
+        if (!outcome.cancelToolDamage) {
+            minion.damageTool(size)
+        }
         minion.setActions(minion.getActionAmount() + size)
+        AbilityEngine.processPeriodicCycle(minion)
     }
 }

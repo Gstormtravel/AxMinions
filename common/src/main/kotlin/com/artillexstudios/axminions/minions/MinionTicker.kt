@@ -2,6 +2,7 @@ package com.artillexstudios.axminions.minions
 
 import com.artillexstudios.axapi.scheduler.Scheduler
 import com.artillexstudios.axminions.api.utils.fastFor
+import com.artillexstudios.axminions.skills.AbilityEngine
 
 object MinionTicker {
     private var tick = 0L
@@ -16,6 +17,9 @@ object MinionTicker {
             }
         }
 
+        if (tick % 600L == 0L) {
+            AbilityEngine.pruneExpiredCooldowns()
+        }
         tick++
     }
 

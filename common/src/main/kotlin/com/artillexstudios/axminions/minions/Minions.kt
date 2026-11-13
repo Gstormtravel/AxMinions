@@ -22,20 +22,24 @@ object Minions {
         if (!Bukkit.isPrimaryThread()) { 
             Scheduler.get().run { a ->
                 run breaking@{
-                    minions.forEach {
-                        if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                            it.setTicking(true)
-                            return@breaking
+                    lock.read {
+                        minions.forEach {
+                            if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                                it.setTicking(true)
+                                return@breaking
+                            }
                         }
                     }
                 }
             }
         } else {
             run breaking@{
-                minions.forEach {
-                    if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                        it.setTicking(true)
-                        return@breaking
+                lock.read {
+                    minions.forEach {
+                        if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                            it.setTicking(true)
+                            return@breaking
+                        }
                     }
                 }
             }
@@ -48,9 +52,11 @@ object Minions {
         val chunkZ = chunk.z
         val world = chunk.world
 
-        minions.forEach {
-            if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                return it.ticking
+        lock.read {
+            minions.forEach {
+                if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                    return it.ticking
+                }
             }
         }
         
@@ -65,20 +71,24 @@ object Minions {
         if (!Bukkit.isPrimaryThread()) {
             Scheduler.get().run {  a ->
                 run breaking@{
-                    minions.forEach {
-                        if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                            it.setTicking(false)
-                            return@breaking
+                    lock.read {
+                        minions.forEach {
+                            if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                                it.setTicking(false)
+                                return@breaking
+                            }
                         }
                     }
                 }
             }
         } else {
             run breaking@{
-                minions.forEach {
-                    if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                        it.setTicking(false)
-                        return@breaking
+                lock.read {
+                    minions.forEach {
+                        if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                            it.setTicking(false)
+                            return@breaking
+                        }
                     }
                 }
             }
@@ -92,6 +102,27 @@ object Minions {
 
         if (!Bukkit.isPrimaryThread()) {
             Scheduler.get().run { a ->
+                lock.write {
+                    var pos: ChunkPos? = null
+                    run breaking@{
+                        minions.forEach {
+                            if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
+                                pos = it
+                                return@breaking
+                            }
+                        }
+                    }
+
+                    if (pos == null) {
+                        pos = ChunkPos(world, chunkX, chunkZ, false)
+                        minions.add(pos)
+                    }
+
+                    pos.addMinion(minion)
+                }
+            }
+        } else {
+            lock.write {
                 var pos: ChunkPos? = null
                 run breaking@{
                     minions.forEach {
@@ -104,28 +135,11 @@ object Minions {
 
                 if (pos == null) {
                     pos = ChunkPos(world, chunkX, chunkZ, false)
-                    minions.add(pos!!)
+                    minions.add(pos)
                 }
 
-                pos!!.addMinion(minion)
+                pos.addMinion(minion)
             }
-        } else {
-            var pos: ChunkPos? = null
-            run breaking@{
-                minions.forEach {
-                    if (world.uid == it.worldUUID && it.x == chunkX && it.z == chunkZ) {
-                        pos = it
-                        return@breaking
-                    }
-                }
-            }
-
-            if (pos == null) {
-                pos = ChunkPos(world, chunkX, chunkZ, false)
-                minions.add(pos!!)
-            }
-
-           pos!!.addMinion(minion)
         }
     }
 
@@ -136,6 +150,22 @@ object Minions {
 
         if (!Bukkit.isPrimaryThread()) {
             Scheduler.get().run { a ->
+                lock.write {
+                    val iterator = minions.iterator()
+                    while (iterator.hasNext()) {
+                        val next = iterator.next()
+
+                        if (world.uid == next.worldUUID && next.x == chunkX && next.z == chunkZ) {
+                            if (next.removeMinion(minion)) {
+                                iterator.remove()
+                            }
+                            break
+                        }
+                    }
+                }
+            }
+        } else {
+            lock.write {
                 val iterator = minions.iterator()
                 while (iterator.hasNext()) {
                     val next = iterator.next()
@@ -146,18 +176,6 @@ object Minions {
                         }
                         break
                     }
-                }
-            }
-        } else {
-            val iterator = minions.iterator()
-            while (iterator.hasNext()) {
-                val next = iterator.next()
-
-                if (world.uid == next.worldUUID && next.x == chunkX && next.z == chunkZ) {
-                    if (next.removeMinion(minion)) {
-                        iterator.remove()
-                    }
-                    break
                 }
             }
         }

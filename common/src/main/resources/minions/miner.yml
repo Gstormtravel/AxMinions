@@ -1,161 +1,464 @@
-name: "<#00AAFF>Miner <white>Minion"
+name: "<#00AAFF>Minion <white>Minerador"
 
 entity:
-  name: "<level_color>[<level>] <#00AAFF>Miner <white>Minion <gray>[<owner>]"
+  name: "<level_color>[<level>] <#00AAFF>Minion <white>Minerador <gray>[<owner>]"
 
 tool:
   material:
     - "WOODEN_PICKAXE"
     - "STONE_PICKAXE"
     - "GOLDEN_PICKAXE"
+    - "COPPER_PICKAXE"
     - "IRON_PICKAXE"
     - "DIAMOND_PICKAXE"
     - "NETHERITE_PICKAXE"
 
-# Can be: sphere, line, face, asphere
-# If set to sphere: checks blocks in a sphere with the range of the minion as radius (Most resource intensive, the larger the radius, the worse)
-# If set to line: checks blocks in all 4 directions from the minion in the range of the minion (Best performance to blocks broken ratio)
-# If set to face: checks blocks only in the facing of the minion (Least resource intensive)
-# If set to asphere: checks blocks in a sphere with the range of the minion as the radius, around the minion
-# Only switch to asphere mode, if you know what you're doing,
-# as it may cause some issues due to states being concurrently modified!
-mode: line
-
-# Can be generator or whitelist
-# with generator mode the minion only mines blocks that are from a stone generator (water & lava on the sides of the block)
-# with whitelist mode, it will break all blocks that match the whitelist
-break: generator
+mode: face
+break: whitelist
 
 whitelist:
-  - "stone"
-  - "cobblestone"
-  - "iron_ore"
-  - "gold_ore"
-  - "redstone_ore"
+  - stone
+  - cobblestone
+  - granite
+  - diorite
+  - andesite
+  - deepslate
+  - cobbled_deepslate
+  - calcite
+  - tuff
+  - coal_ore
+  - deepslate_coal_ore
+  - iron_ore
+  - deepslate_iron_ore
+  - copper_ore
+  - deepslate_copper_ore
+  - gold_ore
+  - deepslate_gold_ore
+  - redstone_ore
+  - deepslate_redstone_ore
+  - emerald_ore
+  - deepslate_emerald_ore
+  - lapis_ore
+  - deepslate_lapis_ore
+  - diamond_ore
+  - deepslate_diamond_ore
+  - nether_gold_ore
+  - nether_quartz_ore
+  - ancient_debris
+  - obsidian
+  - crying_obsidian
+  - basalt
+  - blackstone
+  - end_stone
+  - glowstone
+  - amethyst_block
 
 item:
   type: "player_head"
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzk2MjdiZTYyY2VkNzE0MTEzOWQzZjE1NTc5MGE1ZDQzNTZlYjdiOWVlOTVlNTA0YjMzMjI5NzRjYmM1MTVlYSJ9fX0="
-  name: "<#00AAFF>Miner <white>Minion"
+  name: "<#00AAFF>Minion <white>Minador"
   lore:
     - ""
-    - " <gray>- <white>Collects all items around itself."
+    - " <gray>- <white>Minera blocos ao redor de si."
     - ""
-    - "<#00AAFF>Statistics"
-    - " <#00AAFF>❙ <white>Level: <#FFEEAA><level>"
-    - " <#00AAFF>❙ <white>Blocks broken: <#FFEEAA><actions>"
+    - "<#00AAFF>Estatísticas"
+    - " <#00AAFF>❙ <white>Nível: <#FFEEAA><level>"
+    - " <#00AAFF>❙ <white>Blocos quebrados: <#FFEEAA><actions>"
     - ""
-    - "<#00AAFF><b>(!)</b> Place the minion and give it a pickaxe!"
+    - "<#00AAFF><b>(!)</b> Posicione o minion e dê uma picareta a ele!"
 
 gui:
   upgrade:
     type: "gold_ingot"
-    name: "<#00CCFF><b>Upgrade minion"
+    name: "<#00CCFF><b>Melhorar minion"
     lore:
       - ""
-      - " <gray>- <white>Level: <green><level> » <dark_green><next_level>"
-      - " <gray>- <white>Range: <green><range> » <dark_green><next_range>"
-      - " <gray>- <white>Speed: <green><speed> » <dark_green><next_speed>"
+      - " <gray>- <white>Nível: <green><level> » <dark_green><next_level>"
+      - " <gray>- <white>Alcance: <green><range> » <dark_green><next_range>"
+      - " <gray>- <white>Velocidade: <green><speed> » <dark_green><next_speed>"
       - ""
-      - "<#00CCFF>Requirements:"
-      - " <gray>- <white>Money: <#33FF33><price>$"
-      - " <gray>- <white>Blocks broken: <#33FF33><required_actions>"
+      - "<#00CCFF>Requisitos:"
+      - " <gray>- <white>Dinheiro: <#33FF33><price>$"
+      - " <gray>- <white>Blocos quebrados: <#33FF33><required_actions>"
       - ""
-      - "<#00CCFF><b>(!)</b> Click here to upgrade your minion!"
+      - "<#00CCFF><b>(!)</b> Clique aqui para melhorar o seu minion!"
   statistics:
     type: "paper"
-    name: "<#00AAFF><b>Statistics"
+    name: "<#00AAFF><b>Estatísticas"
     lore:
       - ""
-      - " <gray>- <white>Blocks broken: <#00AAFF><actions>"
+      - " <gray>- <white>Blocos quebrados: <#00AAFF><actions>"
       - ""
 
 upgrades:
-  1:
-    range: 3
-    speed: 200
+  '1':
+    range: 1
+    speed: 220
+    storage: 200
     items:
       helmet:
-        type: "player_head"
+        type: player_head
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzk2MjdiZTYyY2VkNzE0MTEzOWQzZjE1NTc5MGE1ZDQzNTZlYjdiOWVlOTVlNTA0YjMzMjI5NzRjYmM1MTVlYSJ9fX0="
       chestplate:
-        type: "leather_chestplate"
-        color: "200, 200, 200"
+        type: leather_chestplate
+        color: 200, 200, 200
         glow: false
       leggings:
-        type: "leather_leggings"
-        color: "200, 200, 200"
+        type: leather_leggings
+        color: 200, 200, 200
         glow: false
       boots:
-        type: "leather_boots"
-        color: "200, 200, 200"
+        type: leather_boots
+        color: 200, 200, 200
         glow: false
-  2:
-    range: 3
-    speed: 185
+  '2':
+    range: 1
+    speed: 215
+    storage: 300
     requirements:
       money: 1000
       actions: 100
-  3:
-    range: 3
-    speed: 175
+  '3':
+    range: 1
+    speed: 210
+    storage: 500
     requirements:
       money: 3000
       actions: 300
-  4:
-    range: 4
-    speed: 160
+  '4':
+    range: 1
+    speed: 205
+    storage: 750
     requirements:
       money: 10000
       actions: 1000
-  5:
-    range: 4
-    speed: 150
+  '5':
+    range: 1
+    speed: 200
+    storage: 1100
     requirements:
       money: 20000
       actions: 3000
-  6:
-    range: 5
-    speed: 130
+  '6':
+    range: 1
+    speed: 195
+    storage: 1500
     requirements:
       money: 50000
       actions: 6000
-  7:
-    range: 5
-    speed: 115
+  '7':
+    range: 1
+    speed: 190
+    storage: 1950
     requirements:
       money: 150000
       actions: 10000
-  8:
-    range: 6
-    speed: 100
+  '8':
+    range: 1
+    speed: 185
+    storage: 2450
     requirements:
       money: 500000
       actions: 17500
-  9:
-    range: 6
-    speed: 85
+  '9':
+    range: 1
+    speed: 180
+    storage: 3050
     requirements:
       money: 1000000
       actions: 25000
-  10:
-    range: 7
-    speed: 60
+  '10':
+    range: 1
+    speed: 175
+    storage: 3650
     requirements:
-      money: 5000000
+      money: 2500000
       actions: 50000
     items:
       chestplate:
         type: LEATHER_CHESTPLATE
-        color: "150, 150, 150"
+        color: 150, 150, 150
         glow: true
       leggings:
         type: LEATHER_LEGGINGS
-        color: "150, 150, 150"
+        color: 150, 150, 150
         glow: true
       boots:
         type: LEATHER_BOOTS
-        color: "150, 150, 150"
+        color: 150, 150, 150
+        glow: true
+  '11':
+    range: 1
+    speed: 172
+    storage: 4300
+    requirements:
+      money: 4000000
+      actions: 65000
+  '12':
+    range: 1
+    speed: 168
+    storage: 5000
+    requirements:
+      money: 6000000
+      actions: 85000
+  '13':
+    range: 1
+    speed: 164
+    storage: 5750
+    requirements:
+      money: 9000000
+      actions: 110000
+  '14':
+    range: 1
+    speed: 160
+    storage: 6500
+    requirements:
+      money: 12500000
+      actions: 140000
+  '15':
+    range: 1
+    speed: 156
+    storage: 7350
+    requirements:
+      money: 17500000
+      actions: 175000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 100, 200, 255
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 100, 200, 255
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 100, 200, 255
+        glow: true
+  '16':
+    range: 1
+    speed: 152
+    storage: 8200
+    requirements:
+      money: 23000000
+      actions: 215000
+  '17':
+    range: 1
+    speed: 149
+    storage: 9100
+    requirements:
+      money: 30000000
+      actions: 260000
+  '18':
+    range: 1
+    speed: 146
+    storage: 10000
+    requirements:
+      money: 40000000
+      actions: 310000
+  '19':
+    range: 1
+    speed: 143
+    storage: 11000
+    requirements:
+      money: 55000000
+      actions: 365000
+  '20':
+    range: 1
+    speed: 140
+    storage: 12000
+    requirements:
+      money: 75000000
+      actions: 425000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 0, 255, 255
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 0, 255, 255
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 0, 255, 255
         glow: true
 
-config-version: 1
+skill-system:
+  enabled: true
+  points-per-level: 1
+  bonus-points-levels: [5, 10, 15, 20]
+  respec-cost-money: 1000000
+  stats:
+    speed:
+      display-name: '<#00AAFF>Velocidade de Mineração'
+      description:
+      - '<gray>Reduz o intervalo entre ações (-15 ticks/tier).'
+      - '<gray>Piso mínimo de segurança: 50 ticks.'
+      material: REDSTONE
+      slot: 10
+      max-tier: 6
+      cost-per-tier: [1, 1, 1, 1, 1, 1]
+      modifier-per-tier: -15
+      min-speed-floor: 50
+    range:
+      display-name: '<#FFAA00>Alcance de Escavação'
+      description:
+      - '<gray>Aumenta quantos blocos à frente o minion quebra (+1/tier).'
+      - '<gray>Custo mais alto para proteger o TPS do servidor.'
+      material: IRON_PICKAXE
+      slot: 11
+      max-tier: 4
+      cost-per-tier: [2, 2, 3, 3]
+      modifier-per-tier: 1.0
+      max-range-cap: 5.0
+    durability_save:
+      display-name: '<#55FF55>Preservação de Picareta'
+      description:
+      - '<gray>Chance de não gastar durabilidade (+12.5%/tier).'
+      material: ANVIL
+      slot: 12
+      max-tier: 4
+      cost-per-tier: [1, 1, 1, 1]
+      chance-per-tier: 12.5
+    storage:
+      display-name: '<#FFFF55>Reserva de XP'
+      description:
+      - '<gray>Aumenta a capacidade de XP armazenado (+25%/tier).'
+      material: EXPERIENCE_BOTTLE
+      slot: 13
+      max-tier: 5
+      cost-per-tier: [1, 1, 1, 1, 1]
+      modifier-per-tier: 0.25
+
+custom-abilities:
+  fornalha_abissal:
+    enabled: true
+    slot: 19
+    material: BLAZE_POWDER
+    display-name: '<#FF6600>Fornalha Abissal'
+    description:
+    - '<gray>Derrete automaticamente minérios de ferro,'
+    - '<gray>ouro, cobre e detritos ancestrais ao minerar.'
+    min-level: 8
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 40
+    chance-per-tier: 30
+    effects:
+    - type: AUTO_SMELT
+  compactador_mineral:
+    enabled: true
+    slot: 21
+    material: PISTON
+    display-name: '<#55FFFF>Compactador Mineral'
+    description:
+    - '<gray>Converte conjuntos de 9 lingotes/gemas em'
+    - '<gray>blocos compactos dentro do baú vinculado.'
+    min-level: 15
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 50
+    chance-per-tier: 50
+    effects:
+    - type: AUTO_COMPACT
+  xp_magnet:
+    enabled: true
+    slot: 23
+    material: EXPERIENCE_BOTTLE
+    display-name: '<#AADD00>Núcleo de Experiência'
+    description:
+    - '<gray>Amplia a geração e captação de XP mineral'
+    - '<gray>armazenado no tanque do minion (+25%/tier).'
+    min-level: 11
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 100
+    effects:
+    - type: XP_BOOST
+      factor: 1.25
+  fossil_finder:
+    enabled: true
+    slot: 25
+    material: PRISMARINE_SHARD
+    display-name: '<#55CCFF>Olho de Geólogo'
+    description:
+    - '<gray>Chance de encontrar pepitas, quartzo, lápis'
+    - '<gray>ou redstone extras em pedras e minérios.'
+    min-level: 13
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 1.5
+    chance-per-tier: 1.75
+    effects:
+    - type: BONUS_DROP
+  compact_ore:
+    enabled: true
+    slot: 28
+    material: BLAST_FURNACE
+    display-name: '<#FFAA55>Prensa Mineral'
+    description:
+    - '<gray>Funde e compacta automaticamente em blocos'
+    - '<gray>os minérios e barras armazenados no baú.'
+    min-level: 14
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 50
+    chance-per-tier: 50
+    effects:
+    - type: ORE_COMPACT_SMELT
+  obsidian_breaker:
+    enabled: true
+    slot: 30
+    material: OBSIDIAN
+    display-name: '<#AA55FF>Broca Criogênica'
+    description:
+    - '<gray>Quebra obsidiana e ardósia reforçada sem'
+    - '<gray>desgaste extra e dobra o rendimento.'
+    min-level: 16
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 50
+    chance-per-tier: 50
+    effects:
+    - type: OBSIDIAN_EXTRA_BREAK
+  treasure_geode:
+    enabled: true
+    slot: 32
+    material: AMETHYST_SHARD
+    display-name: '<#FF55FF>Geodo Abissal'
+    description:
+    - '<gray>Pequena chance de extrair fragmentos raros'
+    - '<gray>como ametista, diamante bruto ou esmeralda.'
+    min-level: 18
+    max-tier: 3
+    cost-per-tier: [3, 3, 4]
+    trigger: ON_ACTION
+    chance: 0.4
+    chance-per-tier: 0.3
+    effects:
+    - type: RANDOM_MINERAL_CHEST
+  overdrive_pulse:
+    enabled: true
+    slot: 34
+    material: CLOCK
+    display-name: '<#FFEE55>Pulso de Sobrecarga'
+    description:
+    - '<gray>Ativa ciclos acelerados consecutivos de'
+    - '<gray>escavação quando o pulso dispara.'
+    min-level: 20
+    max-tier: 2
+    cost-per-tier: [4, 4]
+    trigger: ON_ACTION
+    chance: 10
+    chance-per-tier: 10
+    cooldown-seconds: 20
+    effects:
+    - type: SPEED_PULSE
+config-version: 2

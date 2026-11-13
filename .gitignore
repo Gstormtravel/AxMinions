@@ -38,5 +38,10 @@ bin/
 ### VS Code ###
 .vscode/
 
+### Kotlin & Swap & Logs ###
+.kotlin/
+*.swp
+logs/
+
 ### Mac OS ###
 .DS_Store

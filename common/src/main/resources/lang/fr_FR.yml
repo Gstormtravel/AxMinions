@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Plugin rechargé avec succès en <white><time></white>ms !"
+
+place:
+  success: "<green>Nouveau minion <type> placé avec succès ! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Impossible de placer le minion ! Vous avez atteint la limite ! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Impossible de placer le minion ! Un minion existe déjà à cet endroit !"
+  missing-permission: "<red>Vous n'avez pas la permission de placer ce minion !"
+  island-limit-reached: "<red>Limite de minions sur l'île atteinte ! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Minion récupéré avec succès ! <gray>(<placed>/<max>)"
+  with-tool: "<green>Minion récupéré avec son outil rangé à l'intérieur !"
+  without-tool: "<green>Minion récupéré ! L'outil a été rendu séparément dans votre inventaire."
+
+errors:
+  inventory-full: "<red>Vous n'avez pas assez de place dans votre inventaire ! Faites de la place d'abord !"
+  give-max-level: "<red>Le niveau maximum de ce minion est <max_level> ! Vous avez essayé de mettre le niveau <level>."
+
+convert:
+  start: "<green>Démarrage de la conversion des données..."
+  finish: "<green>Conversion des données terminée avec succès !"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>Vous devez lier le minion à un conteneur </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>Le minion a besoin d'un outil </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>Le minion a besoin d'eau à proximité </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>Le conteneur de ce minion est plein </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>Le minion n'a plus de charge ! Rechargez-le !</#FFAAAA>⚠"
+
+time:
+  day: "j"
+  hour: "h"
+  minute: "m"
+  second: "s"
+
+statistics: "<white>Minions actifs : <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Minions inactifs : <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Total : <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Minion amélioré avec succès au niveau <white><level></white> !"
+  limit-reached: "<red>Ce minion a déjà atteint le niveau maximum !"
+  fail: "<red>Pas assez d'actions ou d'argent pour acheter cette amélioration !"
+
+link:
+  success: "<green>Minion lié avec succès à un conteneur !"
+  unlink: "<green>Vous avez délié le minion."
+  fail: "<red>Impossible de lier à ce bloc ! Trop loin ou pas un conteneur !"
+  start: "<green>Liaison commencée ! Cliquez sur un conteneur !"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Votre mode de menu a été défini sur <aqua><mode></aqua> !"
+  mode-bedrock: "<yellow>Vous jouez via Bedrock/Geyser — le menu GUI classique est conservé automatiquement."
+  mode-old-client: "<yellow>Votre client ou serveur utilise actuellement uniquement le Menu Classique (GUI)."
+
+skills:
+  upgraded: "<green>Vous avez amélioré <skill> <green>au palier <white><tier>/<max_tier></white> !"
+  no-points: "<red>Points insuffisants ! Requis <white><cost></white>, disponible <white><available></white>."
+  max-tier: "<yellow>Cette compétence est déjà au niveau maximum !"
+  locked-level: "<red>Votre minion doit être niveau <white><level></white> pour débloquer ce pouvoir !"
+  respec-success: "<green>Réinitialisation terminée ! <white><points></white> point(s) restitué(s)."
+  respec-fail-money: "<red>Argent insuffisant pour réinitialiser ! Coût : <white><cost>$</white>."
+  nothing-to-respec: "<yellow>Ce minion n'a pas encore de points investis à réinitialiser !"
+
+directions:
+  north: "Nord"
+  east: "Est"
+  south: "Sud"
+  west: "Ouest"
+
+charge:
+  charge: "<green>Vous avez ajouté <white>30 minutes</white> de charge à votre minion !"
+  not-enough-money: "<red>Vous n'avez pas assez d'argent pour charger ce minion !"
+  not-enough-time-passed: "<red>Votre minion est presque plein ! Attendez avant de recharger !"
+
+tools:
+  wrong-tool: "<red>Vous ne pouvez pas mettre cet objet comme outil pour ce minion !"
+  stored-lore: "<gray>Outil stocké : <white><tool>"
+
+tool-names:
+  "none": "Aucun"
+  "wooden sword": "Épée en Bois"
+  "wooden pickaxe": "Pioche en Bois"
+  "wooden axe": "Hache en Bois"
+  "wooden hoe": "Houe en Bois"
+  "wooden shovel": "Pelle en Bois"
+  "copper sword": "Épée en Cuivre"
+  "copper pickaxe": "Pioche en Cuivre"
+  "copper axe": "Hache en Cuivre"
+  "copper hoe": "Houe en Cuivre"
+  "copper shovel": "Pelle en Cuivre"
+  "stone sword": "Épée en Pierre"
+  "stone pickaxe": "Pioche en Pierre"
+  "stone axe": "Hache en Pierre"
+  "stone hoe": "Houe en Pierre"
+  "stone shovel": "Pelle en Pierre"
+  "iron sword": "Épée en Fer"
+  "iron pickaxe": "Pioche en Fer"
+  "iron axe": "Hache en Fer"
+  "iron hoe": "Houe en Fer"
+  "iron shovel": "Pelle en Fer"
+  "golden sword": "Épée en Or"
+  "golden pickaxe": "Pioche en Or"
+  "golden axe": "Hache en Or"
+  "golden hoe": "Houe en Or"
+  "golden shovel": "Pelle en Or"
+  "diamond sword": "Épée en Diamant"
+  "diamond pickaxe": "Pioche en Diamant"
+  "diamond axe": "Hache en Diamant"
+  "diamond hoe": "Houe en Diamant"
+  "diamond shovel": "Pelle en Diamant"
+  "netherite sword": "Épée en Netherite"
+  "netherite pickaxe": "Pioche en Netherite"
+  "netherite axe": "Hache en Netherite"
+  "netherite hoe": "Houe en Netherite"
+  "netherite shovel": "Pelle en Netherite"
+  "fishing rod": "Canne à Pêche"
+  "shears": "Cisailles"
+  "ender eye": "Œil d'Ender"
+  "blaze rod": "Bâton de Blaze"
+  "bow": "Arc"
+  "crossbow": "Arbalète"
+  "trident": "Trident"
+  "mace": "Masse"
+  "stick": "Bâton"
+
+reset: "<green>Vous avez réinitialisé le nombre de minions de <player> !"
+not-on-island: "<#FF0000>Vous n'êtes actuellement pas sur une île !"
+slot-give: "<green>Vous avez donné <amount> emplacements de minion à <player> !"
+slot-receive: "<green>Vous avez reçu <amount> nouveaux emplacements de minion ! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

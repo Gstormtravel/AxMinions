@@ -65,36 +65,89 @@ object MinionUtils {
     }
 
     @JvmStatic
+    fun isWoodBlock(material: Material): Boolean {
+        val name = material.name
+        return name.endsWith("_WOOD") ||
+            name.endsWith("_LOG") ||
+            name.endsWith("_STEM") ||
+            name.endsWith("_HYPHAE") ||
+            name == "BAMBOO_BLOCK" ||
+            name == "STRIPPED_BAMBOO_BLOCK"
+    }
+
+    @JvmStatic
+    fun isLeafBlock(material: Material): Boolean {
+        val name = material.name
+        return name.endsWith("_LEAVES") ||
+            name == "MANGROVE_ROOTS" ||
+            name == "MUDDY_MANGROVE_ROOTS" ||
+            name == "NETHER_WART_BLOCK" ||
+            name == "WARPED_WART_BLOCK"
+    }
+
+    @JvmStatic
     fun getTree(startBlock: Block): Set<Block> {
         val max: Int = Config.MAX_BREAKS_PER_TICK()
-        var count: Int = 0
+        var count = 0
         val queue: Queue<Block> = LinkedList()
-        val visited = mutableSetOf<Block>()
-        val tree = mutableSetOf<Block>()
+        val visited = HashSet<Block>()
+        val tree = LinkedHashSet<Block>()
+
+        if (!isWoodBlock(startBlock.type)) {
+            return tree
+        }
 
         queue.add(startBlock)
+        visited.add(startBlock)
 
         while (queue.isNotEmpty()) {
             val block = queue.poll()
-
-            val type = block.type.toString()
-            if (type.endsWith("_WOOD") || type.endsWith("_LOG") || type.endsWith("_STEM")) {
+            if (isWoodBlock(block.type)) {
                 if (count >= max) {
                     return tree
                 }
                 count++
                 tree.add(block)
 
-                FACES.fastFor {
-                    val relative = block.getRelative(it)
-                    if (!visited.contains(relative)) {
+                for (face in FACES) {
+                    val relative = block.getRelative(face)
+                    if (visited.add(relative)) {
                         queue.add(relative)
-                        visited.add(relative)
                     }
                 }
             }
         }
 
         return tree
+    }
+
+    @JvmStatic
+    fun getTreeLeaves(treeBlocks: Set<Block>, maxLeaves: Int = 96): Set<Block> {
+        if (treeBlocks.isEmpty() || maxLeaves <= 0) return emptySet()
+        val queue: Queue<Block> = LinkedList()
+        val visited = HashSet<Block>()
+        val leaves = LinkedHashSet<Block>()
+
+        for (wood in treeBlocks) {
+            for (face in FACES) {
+                val rel = wood.getRelative(face)
+                if (visited.add(rel) && isLeafBlock(rel.type)) {
+                    queue.add(rel)
+                }
+            }
+        }
+
+        while (queue.isNotEmpty() && leaves.size < maxLeaves) {
+            val leaf = queue.poll()
+            if (!isLeafBlock(leaf.type)) continue
+            leaves.add(leaf)
+            for (face in FACES) {
+                val rel = leaf.getRelative(face)
+                if (visited.add(rel) && isLeafBlock(rel.type)) {
+                    queue.add(rel)
+                }
+            }
+        }
+        return leaves
     }
 }

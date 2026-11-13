@@ -52,6 +52,34 @@ class MinionPlaceListener : Listener {
         val level = meta.persistentDataContainer.get(Keys.LEVEL, PersistentDataType.INTEGER) ?: 0
         val stats = meta.persistentDataContainer.get(Keys.STATISTICS, PersistentDataType.LONG) ?: 0
         val charge = meta.persistentDataContainer.get(Keys.CHARGE, PersistentDataType.LONG) ?: 0
+        val skillsData = meta.persistentDataContainer.get(Keys.SKILLS, PersistentDataType.STRING) ?: ""
+        val pdcFirstOwner = meta.persistentDataContainer.get(Keys.FIRST_OWNER, PersistentDataType.STRING) ?: ""
+        val pdcOwnerHistory = meta.persistentDataContainer.get(Keys.OWNER_HISTORY, PersistentDataType.STRING) ?: ""
+        val placerName = event.player.name
+        val resolvedFirstOwner = pdcFirstOwner.ifBlank { placerName }
+        val historyList = pdcOwnerHistory.split(" -> ")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .toMutableList()
+        if (historyList.isEmpty()) {
+            if (resolvedFirstOwner != placerName) {
+                historyList.add(resolvedFirstOwner)
+            }
+            historyList.add(placerName)
+        } else if (!historyList.last().equals(placerName, ignoreCase = false)) {
+            historyList.add(placerName)
+        }
+        val resolvedHistory = historyList.joinToString(" -> ")
+        val serializedTool = meta.persistentDataContainer.get(Keys.TOOL, PersistentDataType.STRING) ?: ""
+        val restoredTool = if (serializedTool.isNotBlank()) {
+            try {
+                com.artillexstudios.axapi.serializers.Serializers.ITEM_STACK.deserialize(serializedTool)
+            } catch (_: Throwable) {
+                ItemStack(Material.AIR)
+            }
+        } else {
+            ItemStack(Material.AIR)
+        }
 
         if (Config.PLACE_PERMISSION() && !event.player.hasPermission("axminions.place.${minionType.getName()}")) {
             event.player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.PLACE_MISSING_PERMISSION()))
@@ -155,16 +183,24 @@ class MinionPlaceListener : Listener {
                 event.player,
                 minionType,
                 level,
-                ItemStack(Material.AIR),
+                restoredTool,
                 null,
                 Direction.NORTH,
                 stats,
                 0.0,
                 locationId,
                 0,
-                charge
+                charge,
+                skillsData,
+                resolvedFirstOwner,
+                resolvedHistory
             )
             Minions.startTicking(chunk)
+            com.artillexstudios.axminions.logging.MinionLogger.log(
+                minion,
+                "PLACE",
+                "Minion posicionado por ${event.player.name} (ferramenta=${restoredTool.type.name}, skills=${skillsData.ifBlank { "nenhuma" }})."
+            )
 
 
             Scheduler.get().run { _ ->

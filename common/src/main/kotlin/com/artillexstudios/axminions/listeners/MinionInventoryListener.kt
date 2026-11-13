@@ -10,16 +10,17 @@ import com.artillexstudios.axminions.api.events.MinionToolEvent
 import com.artillexstudios.axminions.api.minions.Direction
 import com.artillexstudios.axminions.api.minions.Minion
 import com.artillexstudios.axminions.api.minions.miniontype.MinionTypes
+import com.artillexstudios.axminions.listeners.LinkingListener
+import com.artillexstudios.axminions.logging.MinionLogger
+import com.artillexstudios.axminions.menus.MenuRouter
+import com.artillexstudios.axminions.menus.MinionActions
+import com.artillexstudios.axminions.menus.MinionSkillsGui
 import com.artillexstudios.axminions.api.utils.CoolDown
 import com.artillexstudios.axminions.api.utils.Keys
 import com.artillexstudios.axminions.api.utils.fastFor
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import java.util.Locale
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -34,14 +35,32 @@ class MinionInventoryListener : Listener {
 
     @EventHandler
     fun onInventoryDragEvent(event: InventoryDragEvent) {
-        if (event.inventory.holder !is Minion) return
-
-        event.isCancelled = true
+        val holder = event.inventory.holder
+        if (holder is Minion || holder is MinionSkillsGui.SkillsGuiHolder || holder is MinionSkillsGui.ToolSwapHolder || holder is MinionSkillsGui.PickupGuiHolder || holder is MinionSkillsGui.AdminMinionsHolder) {
+            event.isCancelled = true
+        }
     }
 
     @EventHandler
     fun onInventoryClickEvent(event: InventoryClickEvent) {
-        val minion = event.inventory.holder as? Minion ?: return
+        val holder = event.inventory.holder
+        if (holder is MinionSkillsGui.SkillsGuiHolder) {
+            handleSkillsClick(event, holder.minion)
+            return
+        }
+        if (holder is MinionSkillsGui.ToolSwapHolder) {
+            handleToolSwapClick(event, holder.minion)
+            return
+        }
+        if (holder is MinionSkillsGui.PickupGuiHolder) {
+            handlePickupClick(event, holder.minion)
+            return
+        }
+        if (holder is MinionSkillsGui.AdminMinionsHolder) {
+            handleAdminClick(event, holder)
+            return
+        }
+        val minion = holder as? Minion ?: return
         if (event.clickedInventory == null) return
         event.isCancelled = true
         val player = event.whoClicked as Player
@@ -52,64 +71,17 @@ class MinionInventoryListener : Listener {
 
         coolDown.add(player, 250)
 
-        val allowedTools = arrayListOf<Material>()
-        run breaking@{
-            minion.getType().getConfig().getStringList("tool.material").fastFor {
-                if (it.equals("*")) {
-                    allowedTools.addAll(Material.entries)
-                    return@breaking
-                }
-
-                allowedTools.add(Material.matchMaterial(it) ?: return@fastFor)
-            }
-        }
-
         if (event.clickedInventory == player.inventory && event.currentItem != null) {
-            if (event.currentItem!!.type !in allowedTools) {
-                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.WRONG_TOOL()))
-                return
+            if (equipToolFromPlayer(minion, player, event.currentItem!!, event.clickedInventory!!)) {
+                minion.updateInventories()
             }
-
-            val minionToolEvent = MinionToolEvent(minion, player, event.currentItem!!.clone(), minion.getTool()!!.clone())
-            Bukkit.getPluginManager().callEvent(minionToolEvent)
-            if (minionToolEvent.isCancelled) return
-
-            if (minion.getTool()?.type != Material.AIR) {
-                val current = minionToolEvent.newTool
-                val tool = minionToolEvent.oldTool
-                minion.setTool(current)
-                minion.updateArmour()
-                event.currentItem!!.amount = 0
-                event.clickedInventory!!.addItem(tool)
-            } else {
-                minion.setTool(minionToolEvent.newTool)
-                event.currentItem!!.amount = 0
-            }
-
-            minion.updateInventories()
             return
         }
 
         if (event.slot == AxMinionsAPI.INSTANCE.getConfig().get("gui.items.item.slot")) {
-            if (minion.getTool()?.type == Material.AIR) return
-            if (player.inventory.firstEmpty() == -1) {
-                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.ERROR_INVENTORY_FULL()))
-                return
+            if (unequipToolToPlayer(minion, player)) {
+                minion.updateInventories()
             }
-            val tool = minion.getTool()?.clone() ?: return
-
-            val minionToolEvent = MinionToolEvent(minion, player, ItemStack(Material.AIR), tool)
-            Bukkit.getPluginManager().callEvent(minionToolEvent)
-            if (minionToolEvent.isCancelled) return
-
-            minion.setTool(ItemStack(Material.AIR))
-            minion.updateArmour()
-            val toolMeta = minionToolEvent.oldTool.itemMeta ?: return
-            toolMeta.persistentDataContainer.remove(Keys.GUI)
-            minionToolEvent.oldTool.setItemMeta(toolMeta)
-
-            player.inventory.addItem(minionToolEvent.oldTool)
-            minion.updateInventories()
             return
         }
 
@@ -122,83 +94,27 @@ class MinionInventoryListener : Listener {
         val type = meta.persistentDataContainer.get(Keys.GUI, PersistentDataType.STRING)
 
         when (type) {
-            "rotate" -> {
-                when (minion.getDirection()) {
-                    Direction.NORTH -> minion.setDirection(Direction.WEST)
-                    Direction.EAST -> minion.setDirection(Direction.NORTH)
-                    Direction.SOUTH -> minion.setDirection(Direction.EAST)
-                    Direction.WEST -> minion.setDirection(Direction.SOUTH)
-                }
+            "rotate" -> MinionActions.rotate(minion)
+
+            "link" -> MinionActions.toggleLink(minion, player, closeGuiOnStart = true)
+
+            "upgrade" -> MinionActions.upgrade(minion, player)
+
+            "statistics" -> MinionActions.collectStorage(minion, player)
+
+            "abilities" -> {
+                minion.openSkillsInventory(player)
+                return
             }
 
-            "link" -> {
-                if (minion.getLinkedChest() != null) {
-                    minion.setLinkedChest(null)
-                    player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.LINK_UNLINK()))
-                    return
-                }
-
-                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.LINK_START()))
-                LinkingListener.linking[player] = minion
-                player.closeInventory()
+            "pickup" -> {
+                MinionSkillsGui.openPickupGui(minion, player)
+                return
             }
 
-            "upgrade" -> {
-                val money = minion.getType().getDouble("requirements.money", minion.getLevel() + 1)
-                val actions = minion.getType().getDouble("requirements.actions", minion.getLevel() + 1)
-
-                if (minion.getType().hasReachedMaxLevel(minion)) {
-                    return
-                }
-
-                if (minion.getActionAmount() < actions) {
-                    sendFail(player)
-                    return
-                }
-
-                AxMinionsPlugin.integrations.getEconomyIntegration()?.let {
-                    if (it.getBalance(player) < money) {
-                        sendFail(player)
-                        return
-                    }
-
-                    it.takeBalance(player, money)
-                }
-
-                if (Config.UPGRADE_SOUND().isNotBlank()) {
-                    player.playSound(
-                        player,
-                        Sound.valueOf(Config.UPGRADE_SOUND().uppercase(Locale.ENGLISH)),
-                        1.0f,
-                        1.0f
-                    )
-                }
-
-                minion.setLevel(minion.getLevel() + 1)
-            }
-
-            "statistics" -> {
-                val stored = minion.getStorage()
-
-                if (stored == 0.0) {
-                    return
-                }
-
-                if (minion.getType() == MinionTypes.getMinionTypes()["seller"]) {
-                    AxMinionsPlugin.integrations.getEconomyIntegration()?.let {
-                        minion.getOwner()?.let { player ->
-                            it.giveBalance(player, stored)
-                            minion.setStorage(0.0)
-                        }
-                    }
-                } else {
-                    player.giveExp(stored.toInt())
-                    minion.setStorage(0.0)
-                }
-
-                AxMinionsPlugin.dataQueue.submit {
-                    AxMinionsPlugin.dataHandler.saveMinion(minion)
-                }
+            "menu_switch" -> {
+                MenuRouter.setOrToggleMenuMode(player, "DIALOG", minion)
+                return
             }
 
             "charge" -> {
@@ -335,29 +251,206 @@ class MinionInventoryListener : Listener {
         holder.removeOpenInventory(event.inventory)
     }
 
-    private fun sendFail(player: Player) {
-        when (Config.UPGRADE_FAIL()) {
-            "title" -> {
-                player.closeInventory()
-                player.sendTitle(StringUtils.formatToString(Messages.UPGRADE_FAIL()), "", 10, 70, 20)
-            }
+    private fun handleSkillsClick(event: InventoryClickEvent, minion: Minion) {
+        if (event.clickedInventory == null) return
+        event.isCancelled = true
+        val player = event.whoClicked as Player
+        if (event.clickedInventory == player.inventory) return
 
-            "subtitle" -> {
-                player.closeInventory()
-                player.sendTitle("", StringUtils.formatToString(Messages.UPGRADE_FAIL()), 10, 70, 20)
-            }
+        if (coolDown.contains(player)) return
+        coolDown.add(player, 200)
 
-            "actionbar" -> {
-                player.closeInventory()
-                player.spigot().sendMessage(
-                    ChatMessageType.ACTION_BAR,
-                    *TextComponent.fromLegacyText(StringUtils.formatToString(Messages.UPGRADE_FAIL()))
-                )
-            }
+        val clicked = event.clickedInventory?.getItem(event.slot) ?: return
+        val tag = clicked.itemMeta?.persistentDataContainer?.get(Keys.GUI, PersistentDataType.STRING) ?: return
 
-            else -> {
-                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.UPGRADE_FAIL()))
+        when {
+            tag == "back_main" -> minion.openChestInventory(player)
+            tag == "respec_skills" -> {
+                if (minion.respecSkills(player)) {
+                    minion.openSkillsInventory(player)
+                }
+            }
+            tag == "menu_switch" -> MenuRouter.setOrToggleMenuMode(player, "DIALOG", minion)
+            tag.startsWith("skill:") -> {
+                val skillId = tag.removePrefix("skill:")
+                if (minion.upgradeSkill(skillId, player)) {
+                    minion.openSkillsInventory(player)
+                }
             }
         }
+    }
+
+    private fun handleToolSwapClick(event: InventoryClickEvent, minion: Minion) {
+        if (event.clickedInventory == null) return
+        event.isCancelled = true
+        val player = event.whoClicked as Player
+
+        if (coolDown.contains(player)) return
+        coolDown.add(player, 200)
+
+        if (event.clickedInventory == player.inventory && event.currentItem != null) {
+            if (equipToolFromPlayer(minion, player, event.currentItem!!, event.clickedInventory!!)) {
+                minion.openToolSwapInventory(player)
+            }
+            return
+        }
+
+        if (event.slot == 13) {
+            if (unequipToolToPlayer(minion, player)) {
+                minion.openToolSwapInventory(player)
+            }
+            return
+        }
+
+        val tag = event.clickedInventory?.getItem(event.slot)?.itemMeta?.persistentDataContainer?.get(Keys.GUI, PersistentDataType.STRING)
+        if (tag == "back_main") {
+            MenuRouter.openMinionMenu(minion, player)
+        }
+    }
+
+    private fun handlePickupClick(event: InventoryClickEvent, minion: Minion) {
+        if (event.clickedInventory == null) return
+        event.isCancelled = true
+        val player = event.whoClicked as Player
+        if (event.clickedInventory == player.inventory) return
+
+        if (coolDown.contains(player)) return
+        coolDown.add(player, 200)
+
+        val tag = event.clickedInventory?.getItem(event.slot)?.itemMeta?.persistentDataContainer?.get(Keys.GUI, PersistentDataType.STRING) ?: return
+        when (tag) {
+            "back_main" -> minion.openChestInventory(player)
+            "pickup_with_tool" -> {
+                player.closeInventory()
+                minion.pickupByPlayer(player, true)
+                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.PICKUP_WITH_TOOL()))
+            }
+            "pickup_without_tool" -> {
+                player.closeInventory()
+                minion.pickupByPlayer(player, false)
+                player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.PICKUP_WITHOUT_TOOL()))
+            }
+        }
+    }
+
+    private fun equipToolFromPlayer(
+        minion: Minion,
+        player: Player,
+        clickedItem: ItemStack,
+        playerInv: org.bukkit.inventory.Inventory
+    ): Boolean {
+        if (clickedItem.type.isAir) return false
+        val allowedTools = arrayListOf<Material>()
+        run breaking@{
+            minion.getType().getConfig().getStringList("tool.material").fastFor {
+                if (it.equals("*")) {
+                    allowedTools.addAll(Material.entries)
+                    return@breaking
+                }
+                allowedTools.add(Material.matchMaterial(it) ?: return@fastFor)
+            }
+        }
+
+        if (clickedItem.type !in allowedTools) {
+            player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.WRONG_TOOL()))
+            return false
+        }
+
+        val minionToolEvent = MinionToolEvent(minion, player, clickedItem.clone(), minion.getTool()!!.clone())
+        Bukkit.getPluginManager().callEvent(minionToolEvent)
+        if (minionToolEvent.isCancelled) return false
+
+        if (minion.getTool()?.type != Material.AIR) {
+            val current = minionToolEvent.newTool
+            val oldTool = minionToolEvent.oldTool
+            minion.setTool(current)
+            minion.updateArmour()
+            clickedItem.amount = 0
+            playerInv.addItem(oldTool)
+            MinionLogger.log(minion, "TOOL_SWAP", "${player.name} trocou ${oldTool.type.name} por ${current.type.name}")
+        } else {
+            minion.setTool(minionToolEvent.newTool)
+            clickedItem.amount = 0
+            MinionLogger.log(minion, "TOOL_EQUIP", "${player.name} equipou ${minionToolEvent.newTool.type.name}")
+        }
+        return true
+    }
+
+    private fun handleAdminClick(event: InventoryClickEvent, holder: MinionSkillsGui.AdminMinionsHolder) {
+        if (event.clickedInventory == null) return
+        event.isCancelled = true
+        val player = event.whoClicked as Player
+        if (event.clickedInventory == player.inventory) return
+
+        if (coolDown.contains(player)) return
+        coolDown.add(player, 200)
+
+        val clicked = event.clickedInventory?.getItem(event.slot) ?: return
+        val tag = clicked.itemMeta?.persistentDataContainer?.get(Keys.GUI, PersistentDataType.STRING) ?: return
+
+        when {
+            tag == "admin_close" -> player.closeInventory()
+            tag == "admin_logs" -> {
+                player.closeInventory()
+                val recent = MinionLogger.getRecentLogs(10)
+                player.sendMessage(StringUtils.formatToString("<#00CCFF><b>[AxMinions Logs]</b> <gray>Ultimos ${recent.size} eventos:"))
+                for (line in recent) {
+                    player.sendMessage("§7$line")
+                }
+            }
+            tag.startsWith("admin_page:") -> {
+                val targetPage = tag.removePrefix("admin_page:").toIntOrNull() ?: 0
+                MinionSkillsGui.openAdminGui(player, targetPage, holder.filterOwner)
+            }
+            tag.startsWith("admin_minion:") -> {
+                val parts = tag.removePrefix("admin_minion:").split(":")
+                if (parts.size != 4) return
+                val worldName = parts[0]
+                val x = parts[1].toIntOrNull() ?: return
+                val y = parts[2].toIntOrNull() ?: return
+                val z = parts[3].toIntOrNull() ?: return
+
+                val target = AxMinionsAPI.INSTANCE.getMinions().firstOrNull { m ->
+                    val l = m.getLocation()
+                    l.world?.name == worldName && l.blockX == x && l.blockY == y && l.blockZ == z
+                } ?: run {
+                    player.sendMessage("§cMinion nao encontrado em $worldName ($x, $y, $z).")
+                    MinionSkillsGui.openAdminGui(player, holder.page, holder.filterOwner)
+                    return
+                }
+
+                if (event.isShiftClick && event.isRightClick) {
+                    MinionLogger.log(target, "ADMIN_REMOVE", "Admin ${player.name} removeu o minion pelo painel.")
+                    target.remove()
+                    player.sendMessage("§aMinion removido em $worldName ($x, $y, $z).")
+                    MinionSkillsGui.openAdminGui(player, holder.page, holder.filterOwner)
+                } else {
+                    player.closeInventory()
+                    player.teleport(target.getLocation().clone().add(0.5, 1.0, 0.5))
+                    player.sendMessage("§aTeleportado para ${target.getType().getName()} em $worldName ($x, $y, $z).")
+                }
+            }
+        }
+    }
+
+    private fun unequipToolToPlayer(minion: Minion, player: Player): Boolean {
+        if (minion.getTool()?.type == Material.AIR) return false
+        if (player.inventory.firstEmpty() == -1) {
+            player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.ERROR_INVENTORY_FULL()))
+            return false
+        }
+        val tool = minion.getTool()?.clone() ?: return false
+        val minionToolEvent = MinionToolEvent(minion, player, ItemStack(Material.AIR), tool)
+        Bukkit.getPluginManager().callEvent(minionToolEvent)
+        if (minionToolEvent.isCancelled) return false
+
+        minion.setTool(ItemStack(Material.AIR))
+        minion.updateArmour()
+        val toolMeta = minionToolEvent.oldTool.itemMeta ?: return false
+        toolMeta.persistentDataContainer.remove(Keys.GUI)
+        minionToolEvent.oldTool.setItemMeta(toolMeta)
+        player.inventory.addItem(minionToolEvent.oldTool)
+        MinionLogger.log(minion, "TOOL_UNEQUIP", "${player.name} retirou ${tool.type.name}")
+        return true
     }
 }

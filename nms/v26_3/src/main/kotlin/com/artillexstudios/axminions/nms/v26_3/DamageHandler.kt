@@ -1,235 +1,131 @@
 package com.artillexstudios.axminions.nms.v26_3
 
-import com.artillexstudios.axminions.api.events.PreMinionDamageEntityEvent
 import com.artillexstudios.axminions.api.minions.Minion
-import net.minecraft.core.Holder
-import net.minecraft.core.component.DataComponents
-import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.util.Mth
-import net.minecraft.world.entity.EntityTypes
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.EquipmentSlotGroup
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.ai.attributes.Attribute
-import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.animal.fox.Fox
-import net.minecraft.world.entity.decoration.ArmorStand
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.enchantment.EnchantmentHelper
-import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.CraftWorld
-import org.bukkit.craftbukkit.entity.CraftEntity
-import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.attribute.Attribute
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
-import java.util.*
+import java.util.UUID
 
 object DamageHandler {
-    private var DUMMY_ENTITY = Fox(EntityTypes.FOX, (Bukkit.getWorlds()[0] as CraftWorld).handle)
-    private var minion: Minion? = null
 
-    fun getUUID(): UUID {
-        return DUMMY_ENTITY.uuid
-    }
+    private val currentMinion = ThreadLocal<Minion?>()
+    private val fallbackUUID = UUID.randomUUID()
 
-    fun getMinion(): Minion? {
-        return minion
-    }
+    fun getUUID(): UUID =
+        currentMinion.get()?.getOwnerUUID() ?: fallbackUUID
+
+    fun getMinion(): Minion? =
+        currentMinion.get()
 
     fun damage(source: Minion, entity: Entity) {
-        val nmsEntity = (entity as CraftEntity).handle
+        if (!entity.isValid || entity !is LivingEntity) return
 
-        synchronized(DUMMY_ENTITY) {
-            this.minion = source
-            var f = 1
+        currentMinion.set(source)
+        try {
+            val owner = source.getOwner()
+            val tool = source.getTool()
 
-            val nmsItem: ItemStack
-            if (source.getTool() == null) {
-                nmsItem = ItemStack.EMPTY
+            var damage = 1.0 // Dano base do punho
+
+            if (tool != null) {
+                // 1. Dano base do material
+                val defaultModifiers = tool.type.getDefaultAttributeModifiers(EquipmentSlot.HAND).get(Attribute.ATTACK_DAMAGE)
+                defaultModifiers?.forEach { modifier -> damage += modifier.amount }
+
+                // 2. Dano customizado
+                val meta = tool.itemMeta
+                if (meta != null) {
+                    val customModifiers = meta.getAttributeModifiers(Attribute.ATTACK_DAMAGE)
+                    customModifiers?.forEach { modifier -> damage += modifier.amount }
+                }
+
+                // 3. Afiação (Sharpness)
+                val sharpnessLevel = tool.getEnchantmentLevel(Enchantment.SHARPNESS)
+                if (sharpnessLevel > 0) {
+                    damage += 1.0 + (sharpnessLevel - 1) * 0.5
+                }
+
+                // 4. Julgamento (Smite)
+                val smiteLevel = tool.getEnchantmentLevel(Enchantment.SMITE)
+                if (smiteLevel > 0 && isUndead(entity)) {
+                    damage += 2.5 * smiteLevel
+                }
+
+                // 5. Ruína dos Artrópodes (Bane of Arthropods)
+                val baneLevel = tool.getEnchantmentLevel(Enchantment.BANE_OF_ARTHROPODS)
+                if (baneLevel > 0 && isArthropod(entity)) {
+                    damage += 2.5 * baneLevel
+                }
+
+                // 6. Fire Aspect
+                val fireAspectLevel = tool.getEnchantmentLevel(Enchantment.FIRE_ASPECT)
+                if (fireAspectLevel > 0) {
+                    entity.fireTicks = Math.max(entity.fireTicks, 80 * fireAspectLevel)
+                }
+            }
+
+            // Bypass na Imunidade (I-Frames)
+            entity.noDamageTicks = 0
+
+            // Aplica o Dano
+            if (owner is Player && owner.isOnline) {
+                entity.damage(damage, owner)
             } else {
-                nmsItem = CraftItemStack.asNMSCopy(source.getTool())
-
-                nmsItem.get(DataComponents.ATTRIBUTE_MODIFIERS)
-                    ?.forEach(EquipmentSlotGroup.MAINHAND) { h: Holder<Attribute>, m ->
-                        if (h.unwrapKey().orElseThrow() == Attributes.ATTACK_DAMAGE.unwrapKey().orElseThrow()) {
-                            f += m.amount().toInt()
-                        }
-                    }
+                entity.damage(damage)
             }
 
-            DUMMY_ENTITY.setItemSlot(EquipmentSlot.MAINHAND, nmsItem)
-
-            if (!nmsEntity.isAttackable || entity is Player) return
-            val f2 = 1.0f
-
-            val damageSource = nmsEntity.damageSources().noAggroMobAttack(DUMMY_ENTITY)
-            var f1 = EnchantmentHelper.modifyDamage(
-                nmsEntity.level() as ServerLevel,
-                nmsItem,
-                nmsEntity,
-                damageSource,
-                f.toFloat()
-            )
-
-            f = (f * (0.2f + f2 * f2 * 0.8f)).toInt()
-            f1 *= f2
-
-            if (f > 0.0f || f1 > 0.0f) {
-                var flag3 = false
-                val b0: Byte = 0
-                val i = b0 + (source.getTool()?.getEnchantmentLevel(Enchantment.KNOCKBACK) ?: 0)
-
-                f = (f * 1.5f).toInt()
-                f = (f + f1).toInt()
-
-
-                if (nmsItem.item.components().get(DataComponents.WEAPON) != null) {
-                    flag3 = true
-                }
-
-                var f3 = 0.0f
-                var flag4 = false
-                val j = (source.getTool()?.getEnchantmentLevel(Enchantment.FIRE_ASPECT) ?: 0)
-
-                if (nmsEntity is LivingEntity) {
-                    f3 = nmsEntity.health
-                    if (j > 0 && !nmsEntity.isOnFire) {
-                        flag4 = true
-                        nmsEntity.igniteForSeconds(1f, false)
-                    }
-                }
-
-                val event = PreMinionDamageEntityEvent(source, entity as org.bukkit.entity.LivingEntity, f.toDouble())
-                Bukkit.getPluginManager().callEvent(event)
-                if (event.isCancelled) {
-                    return
-                }
-
-                val flag5 = nmsEntity.hurtServer(
-                    (source.getLocation().world as CraftWorld).handle as ServerLevel,
-                    damageSource,
-                    f.toFloat()
-                )
-
-                if (flag5) {
-                    if (i > 0) {
-                        if (nmsEntity is LivingEntity) {
-                            (nmsEntity).knockback(
-                                (i.toFloat() * 0.5f).toDouble(),
-                                Mth.sin((source.getLocation().yaw * 0.017453292f).toDouble()).toDouble(),
-                                (-Mth.cos((source.getLocation().yaw * 0.017453292f).toDouble())).toDouble(),
-                                damageSource,
-                                0.0f
-                            )
-                        } else {
-                            nmsEntity.push(
-                                (-Mth.sin((source.getLocation().yaw * 0.017453292f).toDouble()) * i.toFloat() * 0.5f).toDouble(),
-                                0.1,
-                                (Mth.cos((source.getLocation().yaw * 0.017453292f).toDouble()) * i.toFloat() * 0.5f).toDouble()
-                            )
-                        }
-                    }
-
-                    if (flag3) {
-                        val sweep = source.getTool()?.getEnchantmentLevel(Enchantment.SWEEPING_EDGE) ?: 0
-                        val f4 =
-                            1.0f + if (sweep > 0) getSweepingDamageRatio(sweep) else 0.0f * f
-                        val list: List<LivingEntity> = (source.getLocation().world as CraftWorld).handle
-                            .getEntitiesOfClass(LivingEntity::class.java, nmsEntity.boundingBox.inflate(1.0, 0.25, 1.0))
-                            .filter { it !is Player }
-                        val iterator: Iterator<*> = list.iterator()
-
-                        while (iterator.hasNext()) {
-                            val entityliving: LivingEntity = iterator.next() as LivingEntity
-
-                            if ((entityliving !is ArmorStand || !(entityliving).isMarker) && source.getLocation()
-                                    .distanceSquared(
-                                        (entity as Entity).location
-                                    ) < 9.0
-                            ) {
-                                val damageEvent = PreMinionDamageEntityEvent(
-                                    source,
-                                    entityliving.bukkitEntity as org.bukkit.entity.LivingEntity,
-                                    f4.toDouble()
-                                )
-                                Bukkit.getPluginManager().callEvent(damageEvent)
-                                if (event.isCancelled) {
-                                    return
-                                }
-
-                                // CraftBukkit start - Only apply knockback if the damage hits
-                                if (entityliving.hurtServer(
-                                        (source.getLocation().world as CraftWorld).handle as ServerLevel,
-                                        nmsEntity.damageSources().noAggroMobAttack(DUMMY_ENTITY),
-                                        f4
-                                    )
-                                ) {
-                                    entityliving.knockback(
-                                        0.4000000059604645,
-                                        Mth.sin((source.getLocation().yaw * 0.017453292f).toDouble()).toDouble(),
-                                        (-Mth.cos((source.getLocation().yaw * 0.017453292f).toDouble())).toDouble(),
-                                        damageSource,
-                                        0.0f
-                                    )
-                                }
-                                // CraftBukkit end
-                            }
-                        }
-
-                        val d0 = -Mth.sin((source.getLocation().yaw * 0.017453292f).toDouble()).toDouble()
-                        val d1 = Mth.cos((source.getLocation().yaw * 0.017453292f).toDouble()).toDouble()
-
-                        if ((source.getLocation().world as CraftWorld).handle is ServerLevel) {
-                            ((source.getLocation().world as CraftWorld).handle as ServerLevel).sendParticles(
-                                ParticleTypes.SWEEP_ATTACK,
-                                source.getLocation().x + d0,
-                                source.getLocation().y + 0.5,
-                                source.getLocation().z + d1,
-                                0,
-                                d0,
-                                0.0,
-                                d1,
-                                0.0
-                            )
-                        }
-                    }
-
-                    if (nmsEntity is LivingEntity) {
-                        val f5: Float = f3 - nmsEntity.health
-
-                        if (j > 0) {
-                            nmsEntity.igniteForSeconds(j * 4f, false)
-                        }
-
-                        if ((source.getLocation().world as CraftWorld).handle is ServerLevel && f5 > 2.0f) {
-                            val k = (f5.toDouble() * 0.5).toInt()
-
-                            ((source.getLocation().world as CraftWorld).handle).sendParticles(
-                                ParticleTypes.DAMAGE_INDICATOR,
-                                nmsEntity.x,
-                                nmsEntity.getY(0.5),
-                                nmsEntity.z,
-                                k,
-                                0.1,
-                                0.0,
-                                0.1,
-                                0.2
-                            )
-                        }
-                    }
-                } else {
-                    if (flag4) {
-                        nmsEntity.clearFire()
-                    }
+            // Knockback
+            if (tool != null) {
+                val knockbackLevel = tool.getEnchantmentLevel(Enchantment.KNOCKBACK)
+                if (knockbackLevel > 0) {
+                    val direction = entity.location.toVector().subtract(source.getLocation().toVector()).normalize()
+                    entity.velocity = entity.velocity.add(direction.multiply(knockbackLevel * 0.4))
                 }
             }
-            this.minion = null
+
+            // Evitar Aggro
+            if (entity is Mob) {
+                entity.target = null
+            }
+
+        } finally {
+            currentMinion.remove()
         }
     }
 
-    fun getSweepingDamageRatio(level: Int): Float {
-        return 1.0f - 1.0f / (level + 1).toFloat()
+    // Verifica se o mob é morto-vivo (para o Smite)
+    private fun isUndead(entity: Entity): Boolean {
+        return when (entity.type) {
+            org.bukkit.entity.EntityType.ZOMBIE,
+            org.bukkit.entity.EntityType.ZOMBIE_VILLAGER,
+            org.bukkit.entity.EntityType.HUSK,
+            org.bukkit.entity.EntityType.DROWNED,
+            org.bukkit.entity.EntityType.SKELETON,
+            org.bukkit.entity.EntityType.STRAY,
+            org.bukkit.entity.EntityType.WITHER_SKELETON,
+            org.bukkit.entity.EntityType.WITHER,
+            org.bukkit.entity.EntityType.PHANTOM,
+            org.bukkit.entity.EntityType.ZOMBIFIED_PIGLIN,
+            org.bukkit.entity.EntityType.ZOGLIN,
+            org.bukkit.entity.EntityType.SKELETON_HORSE,
+            org.bukkit.entity.EntityType.ZOMBIE_HORSE -> true
+            else -> false
+        }
+    }
+
+    // Verifica se o mob é um artrópode (para o Bane of Arthropods)
+    private fun isArthropod(entity: Entity): Boolean {
+        return when (entity.type) {
+            org.bukkit.entity.EntityType.SPIDER,
+            org.bukkit.entity.EntityType.CAVE_SPIDER,
+            org.bukkit.entity.EntityType.SILVERFISH,
+            org.bukkit.entity.EntityType.ENDERMITE,
+            org.bukkit.entity.EntityType.BEE -> true
+            else -> false
+        }
     }
 }

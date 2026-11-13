@@ -26,12 +26,16 @@ import com.artillexstudios.axminions.api.minions.Direction
 import com.artillexstudios.axminions.api.minions.Minion
 import com.artillexstudios.axminions.api.minions.miniontype.MinionType
 import com.artillexstudios.axminions.api.minions.miniontype.MinionTypes
+import com.artillexstudios.axminions.api.skills.SkillSystemSpec
 import com.artillexstudios.axminions.api.utils.Keys
 import com.artillexstudios.axminions.api.utils.TimeUtils
 import com.artillexstudios.axminions.api.utils.fastFor
 import com.artillexstudios.axminions.api.warnings.Warning
 import com.artillexstudios.axminions.api.warnings.Warnings
 import com.artillexstudios.axminions.listeners.LinkingListener
+import com.artillexstudios.axminions.menus.MenuRouter
+import com.artillexstudios.axminions.menus.MinionSkillsGui
+import com.artillexstudios.axminions.skills.AbilityEngine
 import com.artillexstudios.axminions.utils.Enchantments
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.Bukkit
@@ -65,7 +69,10 @@ class Minion(
     private var storage: Double,
     private val locationID: Int,
     private var chestLocationId: Int,
-    private var charge: Long
+    private var charge: Long,
+    skillsData: String = "",
+    firstOwnerInput: String = "",
+    ownerHistoryInput: String = ""
 ) : Minion {
     companion object {
         private val equipmentSlots: Array<EquipmentSlot> = arrayOf(
@@ -98,6 +105,7 @@ class Minion(
     private var warning: Warning? = null
     private var hologram: Hologram? = null
     private val extraData = hashMapOf<String, String>()
+    private val skillAllocations = SkillSystemSpec.deserializeAllocations(skillsData)
     private var linkedInventory: Inventory? = null
     internal val openInventories = mutableListOf<Inventory>()
     private var toolMeta: ItemMeta? = null
@@ -108,10 +116,18 @@ class Minion(
     val broken = AtomicBoolean(false)
     private var ownerOnline = false
     private var unbreakable = false
+    private var firstOwner: String = firstOwnerInput.ifBlank { owner.name ?: ownerUUID.toString() }
+    private val ownershipHistory: MutableList<String> = ownerHistoryInput
+        .split(" -> ")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+        .toMutableList()
+        .ifEmpty { mutableListOf(this.firstOwner) }
 
     init {
         spawn()
         Minions.load(this)
+        updateLinkedInventory()
     }
 
     override fun getType(): MinionType {
@@ -133,8 +149,6 @@ class Minion(
                 return@onInteract
             }
 
-            // We want to do this, so we don't accidentally cause dupes...
-            // Atomic variable; we don't want the scheduler to mess up the state
             if (event.isAttack) {
                 broken.set(true)
             }
@@ -151,7 +165,7 @@ class Minion(
                     } else {
                         if (ownerUUID == event.player.uniqueId) {
                             breakMinion(event)
-                        } else if ((canBuildAt && !Config.ONLY_OWNER_BREAK()) || event.player.hasPermission("axminions.*")) {
+                        } else if ((canBuildAt && !Config.ONLY_OWNER_BREAK()) || event.player.hasPermission("axminions.*") || event.player.isOp) {
                             breakMinion(event)
                         } else {
                             broken.set(false)
@@ -160,7 +174,7 @@ class Minion(
                 } else {
                     if (ownerUUID == event.player.uniqueId) {
                         openInventory(event.player)
-                    } else if ((canBuildAt && !Config.ONLY_OWNER_GUI()) || event.player.hasPermission("axminions.*")) {
+                    } else if ((canBuildAt && !Config.ONLY_OWNER_GUI()) || event.player.hasPermission("axminions.*") || event.player.isOp) {
                         openInventory(event.player)
                     }
                 }
@@ -197,22 +211,36 @@ class Minion(
     }
 
     private fun breakMinion(event: PacketEntityInteractEvent) {
-        val preBreakEvent = PreMinionPickupEvent(event.player, this)
+        pickupByPlayer(event.player, false)
+    }
+
+    override fun pickupByPlayer(player: Player, keepToolInside: Boolean) {
+        val preBreakEvent = PreMinionPickupEvent(player, this)
         Bukkit.getPluginManager().callEvent(preBreakEvent)
         if (preBreakEvent.isCancelled) return
 
-        LinkingListener.linking.remove(event.player)
+        LinkingListener.linking.remove(player)
         remove()
         setTicking(false)
         openInventories.fastFor { it.viewers.fastFor { viewer -> viewer.closeInventory() } }
-        val tool = getTool()
-        val asItem = getAsItem()
-        val remaining = event.player.inventory.addItem(tool, asItem)
+
+        val currentTool = getTool()?.takeIf { !it.type.isAir }
+        val asItem = getAsItem(keepToolInside && currentTool != null)
+        com.artillexstudios.axminions.logging.MinionLogger.log(
+            this,
+            if (keepToolInside && currentTool != null) "PICKUP_COM_FERRAMENTA" else "PICKUP_SEM_FERRAMENTA",
+            "Recolhido por ${player.name} (ferramenta=${currentTool?.type?.name ?: "NONE"}, guardadaInternamente=$keepToolInside, armazenamento=${storage.toLong()})."
+        )
+        val remaining = if (keepToolInside || currentTool == null) {
+            player.inventory.addItem(asItem)
+        } else {
+            player.inventory.addItem(currentTool, asItem)
+        }
 
         if (getType() == MinionTypes.getMinionTypes()["seller"]) {
             AxMinionsPlugin.integrations.getEconomyIntegration()?.let {
-                getOwner().let { player ->
-                    it.giveBalance(player, storage)
+                getOwner().let { ownerPlayer ->
+                    it.giveBalance(ownerPlayer, storage)
                     setStorage(0.0)
                 }
             }
@@ -246,6 +274,9 @@ class Minion(
         Warnings.remove(this, Warnings.NO_CHARGE)
 
         Scheduler.get().executeAt(location) {
+            if (type.shouldRun(this)) {
+                AbilityEngine.processPeriodicCycle(this)
+            }
             type.tick(this)
         }
         animate()
@@ -388,6 +419,38 @@ class Minion(
                 } else {
                     item = null
                 }
+            } else if (it.equals("menu_switch")) {
+                val viewer = inventory.viewers.firstOrNull() as? Player
+                if (viewer != null && !MenuRouter.canUseDialog(viewer)) {
+                    item = null
+                } else if (viewer == null && !Config.USE_DIALOG_MENU()) {
+                    item = null
+                } else {
+                    val switchSection = AxMinionsAPI.INSTANCE.getConfig().getConfig().getSection("gui.items.$it")
+                    if (switchSection == null) {
+                        item = null
+                    } else {
+                        item = ItemBuilder.create(switchSection).get()
+                        val meta = item.itemMeta!!
+                        meta.persistentDataContainer.set(Keys.GUI, PersistentDataType.STRING, it)
+                        item.itemMeta = meta
+                    }
+                }
+            } else if (it.equals("abilities")) {
+                val abSection = AxMinionsAPI.INSTANCE.getConfig().getConfig().getSection("gui.items.$it")
+                if (abSection == null || !type.getSkillSystemSpec().enabled) {
+                    item = null
+                } else {
+                    item = ItemBuilder.create(
+                        abSection,
+                        Placeholder.unparsed("skill_points", getAvailableSkillPoints().toString()),
+                        Placeholder.unparsed("spent_points", getSpentSkillPoints().toString()),
+                        Placeholder.unparsed("total_points", getTotalSkillPoints().toString())
+                    ).get()
+                    val meta = item.itemMeta!!
+                    meta.persistentDataContainer.set(Keys.GUI, PersistentDataType.STRING, it)
+                    item.itemMeta = meta
+                }
             } else {
                 val rotation = Placeholder.unparsed("direction", Messages.ROTATION_NAME(direction))
                 val linked = Placeholder.unparsed(
@@ -401,7 +464,8 @@ class Minion(
                 item = ItemBuilder.create(
                     AxMinionsAPI.INSTANCE.getConfig().getConfig().getSection("gui.items.$it"),
                     rotation,
-                    linked
+                    linked,
+                    Placeholder.unparsed("skill_points", getAvailableSkillPoints().toString())
                 ).get()
 
                 val meta = item.itemMeta!!
@@ -416,6 +480,10 @@ class Minion(
     }
 
     override fun openInventory(player: Player) {
+        MenuRouter.openMinionMenu(this, player)
+    }
+
+    override fun openChestInventory(player: Player) {
         LinkingListener.linking.remove(player)
         val inventory = Bukkit.createInventory(
             this,
@@ -438,8 +506,55 @@ class Minion(
         openInventories.add(inventory)
     }
 
+    override fun openSkillsInventory(player: Player) {
+        LinkingListener.linking.remove(player)
+        MinionSkillsGui.openSkillsGui(this, player)
+    }
+
+    override fun openToolSwapInventory(player: Player) {
+        LinkingListener.linking.remove(player)
+        MinionSkillsGui.openToolSwapGui(this, player)
+    }
+
     override fun getAsItem(): ItemStack {
-        return type.getItem(level, actions, charge)
+        return getAsItem(false)
+    }
+
+    override fun getAsItem(includeTool: Boolean): ItemStack {
+        val currentTool = if (includeTool) tool?.takeIf { !it.type.isAir } else null
+        val serializedTool = if (currentTool != null) {
+            com.artillexstudios.axapi.serializers.Serializers.ITEM_STACK.serialize(currentTool)
+        } else {
+            ""
+        }
+        val toolDisplay = if (currentTool != null) Messages.TOOL_NAME(currentTool.type) else null
+        return type.getItem(
+            level,
+            actions,
+            charge,
+            getSkillsData(),
+            serializedTool,
+            toolDisplay,
+            getFirstOwner(),
+            getOwnershipHistoryString()
+        )
+    }
+
+    override fun getFirstOwner(): String = firstOwner
+
+    override fun getOwnershipHistory(): List<String> = ownershipHistory.toList()
+
+    override fun getOwnershipHistoryString(): String = ownershipHistory.joinToString(" -> ")
+
+    override fun setOwnershipInfo(firstOwner: String, history: String) {
+        if (firstOwner.isNotBlank()) {
+            this.firstOwner = firstOwner
+        }
+        val parsed = history.split(" -> ").map { it.trim() }.filter { it.isNotEmpty() }
+        if (parsed.isNotEmpty()) {
+            ownershipHistory.clear()
+            ownershipHistory.addAll(parsed)
+        }
     }
 
     override fun getLevel(): Int {
@@ -513,6 +628,8 @@ class Minion(
 
     override fun setLevel(level: Int) {
         this.level = level
+        this.dirty = true
+        type.onToolDirty(this)
         updateArmour()
         updateInventories()
 
@@ -622,16 +739,35 @@ class Minion(
     }
 
     override fun getLinkedInventory(): Inventory? {
-        return linkedInventory
+        val chest = linkedChest ?: return null
+
+        if (linkedInventory != null) {
+            return linkedInventory
+        }
+
+        val world = chest.world ?: return null
+        val chunkX = chest.blockX shr 4
+        val chunkZ = chest.blockZ shr 4
+
+        if (world.isChunkLoaded(chunkX, chunkZ)) {
+            val state = chest.block.state
+            if (state is Container) {
+                linkedInventory = state.inventory
+                return linkedInventory
+            }
+        }
+
+        return null
     }
 
     override fun addToContainerOrDrop(itemStack: ItemStack) {
-        if (linkedInventory == null) {
+        val inv = getLinkedInventory()
+        if (inv == null) {
             AxMinionsPlugin.integrations.getStackerIntegration().dropItemAt(itemStack, itemStack.amount, location)
             return
         }
 
-        val remaining = linkedInventory?.addItem(itemStack)
+        val remaining = inv.addItem(itemStack)
 
         remaining?.fastFor { _, u ->
             AxMinionsPlugin.integrations.getStackerIntegration().dropItemAt(u, u.amount, location)
@@ -639,11 +775,9 @@ class Minion(
     }
 
     override fun addWithRemaining(itemStack: ItemStack): HashMap<Int, ItemStack>? {
-        if (linkedInventory == null) {
-            return null
-        }
-
-        return linkedInventory?.addItem(itemStack)
+        val inv = getLinkedInventory()
+        if (inv == null) return null
+        return inv.addItem(itemStack)
     }
 
     override fun addToContainerOrDrop(itemStack: Iterable<ItemStack>) {
@@ -695,16 +829,21 @@ class Minion(
     override fun setTicking(ticking: Boolean) {
         this.ticking = ticking
 
-        if (linkedChest == null) return
+        val chest = linkedChest ?: return
 
         if (ticking) {
-            Scheduler.get().runAt(linkedChest) { a ->
-                if (linkedChest!!.world!!.isChunkLoaded(linkedChest!!.blockX shr 4, linkedChest!!.blockZ shr 4)) {
-                    linkedInventory = (linkedChest?.block?.state as? Container)?.inventory
+            val world = chest.world ?: return
+            val chunkX = chest.blockX shr 4
+            val chunkZ = chest.blockZ shr 4
+
+            Scheduler.get().runAt(chest) { _ ->
+                if (world.isChunkLoaded(chunkX, chunkZ)) {
+                    val state = chest.block.state
+                    if (state is Container) {
+                        linkedInventory = state.inventory
+                    }
                 }
             }
-        } else {
-            linkedInventory = null
         }
     }
 
@@ -719,7 +858,6 @@ class Minion(
     override fun markDirty() {
         dirty = true
     }
-
 
     override fun damageTool(amount: Int) {
         if (!Config.USE_DURABILITY()) return
@@ -740,19 +878,18 @@ class Minion(
 
         val unbreakingLevel = Enchantments.UNBREAKING?.let { toolMeta.getEnchantLevel(it) } ?: 0
         if (Math.random() > 1f / (unbreakingLevel + 1)) return
+        if (AbilityEngine.shouldSaveDurability(this)) return
 
         if (remaining > amount) {
-            // We can damage the tool
             toolMeta.damage += amount
             tool.itemMeta = toolMeta
             updateInventories()
             return
         } else {
-            // Tool is breaking
             if (Config.CAN_BREAK_TOOLS()) {
                 if (Config.PULL_FROM_CHEST()) {
                     val item = pullFromChest()
-                    linkedInventory?.addItem(tool)
+                    getLinkedInventory()?.addItem(tool)
                     setTool(item)
 
                     if (!tool.type.isAir && notDurable.contains(tool.type)) {
@@ -771,7 +908,7 @@ class Minion(
             } else {
                 if (Config.PULL_FROM_CHEST()) {
                     val item = pullFromChest()
-                    linkedInventory?.addItem(tool)
+                    getLinkedInventory()?.addItem(tool)
                     setTool(item)
 
                     if (!tool.type.isAir && notDurable.contains(tool.type)) {
@@ -811,14 +948,12 @@ class Minion(
         val remaining = maxDurability - damage
 
         if (remaining > 1) {
-            // We can damage the tool
             return true
         } else {
-            // Tool is breaking
             if (Config.CAN_BREAK_TOOLS()) {
                 if (Config.PULL_FROM_CHEST()) {
                     val item = pullFromChest()
-                    linkedInventory?.addItem(tool)
+                    getLinkedInventory()?.addItem(tool)
                     setTool(item)
 
                     if (!tool.type.isAir && notDurable.contains(tool.type)) {
@@ -837,7 +972,7 @@ class Minion(
             } else {
                 if (Config.PULL_FROM_CHEST()) {
                     val item = pullFromChest()
-                    linkedInventory?.addItem(tool)
+                    getLinkedInventory()?.addItem(tool)
                     setTool(item)
 
                     if (!tool.type.isAir && notDurable.contains(tool.type)) {
@@ -864,10 +999,12 @@ class Minion(
             allowedTools.add(Material.matchMaterial(it) ?: return@fastFor)
         }
 
-        linkedInventory?.contents?.fastFor {
+        val inv = getLinkedInventory() ?: return ItemStack(Material.AIR)
+
+        inv.contents.fastFor {
             if (it == null || it.type !in allowedTools) return@fastFor
 
-            linkedInventory?.remove(it)
+            inv.remove(it)
             return it
         }
 
@@ -896,5 +1033,178 @@ class Minion(
 
     override fun getInventory(): Inventory {
         return Bukkit.createInventory(this, 9)
+    }
+
+    fun updateLinkedInventory() {
+        val chest = linkedChest ?: return
+        val world = chest.world ?: return
+        val chunkX = chest.blockX shr 4
+        val chunkZ = chest.blockZ shr 4
+
+        Scheduler.get().executeAt(chest) {
+            if (world.isChunkLoaded(chunkX, chunkZ)) {
+                val state = chest.block.state
+                if (state is Container) {
+                    linkedInventory = state.inventory
+                    updateInventories()
+                }
+            }
+        }
+    }
+
+    fun clearLinkedInventory() {
+        linkedInventory = null
+    }
+
+    override fun getSkillsData(): String {
+        return SkillSystemSpec.serializeAllocations(skillAllocations)
+    }
+
+    override fun getSkillAllocations(): Map<String, Int> {
+        return Collections.unmodifiableMap(skillAllocations)
+    }
+
+    override fun getStatTier(statId: String): Int {
+        return skillAllocations[statId] ?: 0
+    }
+
+    override fun getAbilityTier(abilityId: String): Int {
+        return skillAllocations[abilityId] ?: 0
+    }
+
+    override fun getTotalSkillPoints(): Int {
+        return type.getSkillSystemSpec().getTotalEarnedPoints(level)
+    }
+
+    override fun getSpentSkillPoints(): Int {
+        return type.getSkillSystemSpec().getSpentPoints(skillAllocations)
+    }
+
+    override fun getAvailableSkillPoints(): Int {
+        return (getTotalSkillPoints() - getSpentSkillPoints()).coerceAtLeast(0)
+    }
+
+    override fun getEffectiveRange(): Double {
+        return AbilityEngine.getEffectiveRange(this)
+    }
+
+    override fun getEffectiveSpeed(): Int {
+        return AbilityEngine.getEffectiveSpeed(this)
+    }
+
+    override fun upgradeSkill(skillId: String, player: Player): Boolean {
+        val spec = type.getSkillSystemSpec()
+        if (!spec.enabled) return false
+
+        val stat = spec.stats[skillId]
+        val ability = spec.abilities[skillId]
+        if (stat == null && ability == null) return false
+
+        val currentTier = skillAllocations[skillId] ?: 0
+        val maxTier = stat?.maxTier ?: ability!!.maxTier
+        val costs = stat?.costPerTier ?: ability!!.costPerTier
+        val displayName = stat?.displayName ?: ability!!.displayName
+
+        if (ability != null && level < ability.minLevel) {
+            player.sendMessage(
+                StringUtils.formatToString(
+                    Messages.PREFIX() + Messages.SKILL_LOCKED_LEVEL(),
+                    Placeholder.unparsed("level", ability.minLevel.toString())
+                )
+            )
+            return false
+        }
+
+        if (currentTier >= maxTier) {
+            player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.SKILL_MAX_TIER()))
+            return false
+        }
+
+        val cost = spec.getCostForNextTier(costs, currentTier)
+        if (getAvailableSkillPoints() < cost) {
+            player.sendMessage(
+                StringUtils.formatToString(
+                    Messages.PREFIX() + Messages.SKILL_NO_POINTS(),
+                    Placeholder.unparsed("cost", cost.toString()),
+                    Placeholder.unparsed("available", getAvailableSkillPoints().toString())
+                )
+            )
+            return false
+        }
+
+        val nextTier = currentTier + 1
+        skillAllocations[skillId] = nextTier
+        dirty = true
+        type.onToolDirty(this)
+        updateInventories()
+
+        AxMinionsPlugin.dataQueue.submit {
+            AxMinionsPlugin.dataHandler.saveMinion(this)
+        }
+        com.artillexstudios.axminions.logging.MinionLogger.log(
+            this,
+            "SKILL_UPGRADE",
+            "Jogador ${player.name} evoluiu '$skillId' para tier $nextTier/$maxTier (custo: $cost pts)."
+        )
+
+        player.sendMessage(
+            StringUtils.formatToString(
+                Messages.PREFIX() + Messages.SKILL_UPGRADED(),
+                Placeholder.parsed("skill", displayName),
+                Placeholder.unparsed("tier", nextTier.toString()),
+                Placeholder.unparsed("max_tier", maxTier.toString())
+            )
+        )
+        return true
+    }
+
+    override fun respecSkills(player: Player): Boolean {
+        val spec = type.getSkillSystemSpec()
+        if (!spec.enabled) return false
+
+        if (skillAllocations.isEmpty() || getSpentSkillPoints() <= 0) {
+            player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.SKILL_NOTHING_TO_RESPEC()))
+            return false
+        }
+
+        val cost = spec.respecCostMoney
+        if (cost > 0.0) {
+            val eco = AxMinionsPlugin.integrations.getEconomyIntegration()
+            if (eco != null) {
+                if (eco.getBalance(player) < cost) {
+                    player.sendMessage(
+                        StringUtils.formatToString(
+                            Messages.PREFIX() + Messages.SKILL_RESPEC_FAIL_MONEY(),
+                            Placeholder.unparsed("cost", numberFormat.format(cost))
+                        )
+                    )
+                    return false
+                }
+                eco.takeBalance(player, cost)
+            }
+        }
+
+        val refunded = getSpentSkillPoints()
+        skillAllocations.clear()
+        dirty = true
+        type.onToolDirty(this)
+        updateInventories()
+
+        AxMinionsPlugin.dataQueue.submit {
+            AxMinionsPlugin.dataHandler.saveMinion(this)
+        }
+        com.artillexstudios.axminions.logging.MinionLogger.log(
+            this,
+            "RESPEC",
+            "Jogador ${player.name} resetou habilidades ($refunded pts devolvidos, taxa $${cost.toLong()})."
+        )
+
+        player.sendMessage(
+            StringUtils.formatToString(
+                Messages.PREFIX() + Messages.SKILL_RESPEC_SUCCESS(),
+                Placeholder.unparsed("points", refunded.toString())
+            )
+        )
+        return true
     }
 }

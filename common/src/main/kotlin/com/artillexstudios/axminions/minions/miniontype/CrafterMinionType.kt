@@ -5,6 +5,8 @@ import com.artillexstudios.axminions.api.minions.Minion
 import com.artillexstudios.axminions.api.minions.miniontype.MinionType
 import com.artillexstudios.axminions.api.warnings.Warnings
 import com.artillexstudios.axminions.minions.MinionTicker
+import com.artillexstudios.axminions.skills.AbilityEngine
+import java.util.concurrent.ThreadLocalRandom
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.*
@@ -18,7 +20,7 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
     override fun onToolDirty(minion: Minion) {
         val minionImpl = minion as com.artillexstudios.axminions.minions.Minion
         minionImpl.setRange(1.0)
-        minionImpl.setNextAction(getLong("speed", minion.getLevel()).toInt())
+        minionImpl.setNextAction(minion.getEffectiveSpeed())
     }
 
     override fun run(minion: Minion) {
@@ -97,9 +99,13 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
             contents[item] = item.amount
         }
 
+        val crafterBonus = AbilityEngine.getCrafterAbilityBonus(minion)
+        var craftsRemaining = crafterBonus.maxBatchCrafts
+        var didAnyCraft = false
+
         // SHAPELESS
         var recipeIterator = shapeless.iterator()
-        while (recipeIterator.hasNext()) {
+        while (recipeIterator.hasNext() && craftsRemaining > 0) {
             val recipe = recipeIterator.next()
 
             if (!canCraftShapeless(recipe, contents)) {
@@ -107,8 +113,11 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
                 continue
             }
 
-            doCraftShapeless(inv, recipe, contents)
+            doCraftShapeless(inv, recipe, contents, crafterBonus)
+            awardBonusCraftIfProc(minion, recipe.result, crafterBonus.extraOutputChance, crafterBonus.smeltOutputs)
             minion.setActions(minion.getActionAmount() + 1)
+            didAnyCraft = true
+            craftsRemaining--
 
             recipeIterator = shapeless.iterator()
         }
@@ -116,7 +125,7 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
 
         // SHAPED
         var shapedIterator = shaped.iterator()
-        while (shapedIterator.hasNext()) {
+        while (shapedIterator.hasNext() && craftsRemaining > 0) {
             val recipe = shapedIterator.next()
 
             if (!canCraftShaped(recipe, contents)) {
@@ -124,11 +133,27 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
                 continue
             }
 
-            doCraftShaped(inv, recipe, contents)
+            doCraftShaped(inv, recipe, contents, crafterBonus)
+            awardBonusCraftIfProc(minion, recipe.result, crafterBonus.extraOutputChance, crafterBonus.smeltOutputs)
             minion.setActions(minion.getActionAmount() + 1)
+            didAnyCraft = true
+            craftsRemaining--
 
             shapedIterator = shaped.iterator()
         }
+
+        if (didAnyCraft && crafterBonus.autoCompactAfter) {
+            AbilityEngine.compactWholeLinkedChest(minion)
+        }
+        AbilityEngine.processPeriodicCycle(minion)
+    }
+
+    private fun awardBonusCraftIfProc(minion: Minion, result: ItemStack, chance: Double, smeltOutputs: Boolean) {
+        if (chance <= 0.0 || ThreadLocalRandom.current().nextDouble(100.0) >= chance) return
+        val base = if (smeltOutputs) AbilityEngine.smeltSingleItemIfMapped(result) else result.clone()
+        val extra = base.clone()
+        extra.amount = 1
+        minion.addToContainerOrDrop(extra)
     }
 
     private fun canCraftShapeless(recipe: ShapelessRecipe, contents: HashMap<ItemStack, Int>): Boolean {
@@ -196,10 +221,21 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
         return true
     }
 
-    private fun doCraftShapeless(inventory: Inventory, recipe: ShapelessRecipe, contents: HashMap<ItemStack, Int>) {
+    private fun doCraftShapeless(
+        inventory: Inventory,
+        recipe: ShapelessRecipe,
+        contents: HashMap<ItemStack, Int>,
+        bonus: AbilityEngine.CrafterBonus
+    ) {
+        var skippedRecycle = false
         for (recipeChoice in recipe.choiceList) {
             if (recipeChoice == null) continue
             if (recipeChoice.itemStack == null) continue
+
+            if (!skippedRecycle && bonus.recycleChance > 0.0 && ThreadLocalRandom.current().nextDouble(100.0) < bonus.recycleChance) {
+                skippedRecycle = true
+                continue
+            }
 
             for (content in inventory.contents) {
                 if (content == null) continue
@@ -225,7 +261,8 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
             }
         }
 
-        val result = recipe.result.clone()
+        val rawResult = recipe.result.clone()
+        val result = if (bonus.smeltOutputs) AbilityEngine.smeltSingleItemIfMapped(rawResult) else rawResult
         inventory.addItem(result)
         val iterator: Iterator<MutableMap.MutableEntry<ItemStack, Int>> = contents.entries.iterator()
         while (iterator.hasNext()) {
@@ -240,10 +277,21 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
         contents[result] = result.amount
     }
 
-    private fun doCraftShaped(inventory: Inventory, recipe: ShapedRecipe, contents: HashMap<ItemStack, Int>) {
+    private fun doCraftShaped(
+        inventory: Inventory,
+        recipe: ShapedRecipe,
+        contents: HashMap<ItemStack, Int>,
+        bonus: AbilityEngine.CrafterBonus
+    ) {
+        var skippedRecycle = false
         for (recipeChoice in recipe.choiceMap) {
             if (recipeChoice.value == null) continue
             if (recipeChoice.value.itemStack == null) continue
+
+            if (!skippedRecycle && bonus.recycleChance > 0.0 && ThreadLocalRandom.current().nextDouble(100.0) < bonus.recycleChance) {
+                skippedRecycle = true
+                continue
+            }
 
             for (content in inventory.contents) {
                 if (content == null) continue
@@ -269,7 +317,8 @@ class CrafterMinionType : MinionType("crafter", AxMinionsPlugin.INSTANCE.getReso
             }
         }
 
-        val result = recipe.result.clone()
+        val rawResult = recipe.result.clone()
+        val result = if (bonus.smeltOutputs) AbilityEngine.smeltSingleItemIfMapped(rawResult) else rawResult
         inventory.addItem(result)
         val iterator: Iterator<MutableMap.MutableEntry<ItemStack, Int>> = contents.entries.iterator()
         while (iterator.hasNext()) {

@@ -17,11 +17,15 @@ class Config(file: File, stream: InputStream) {
     companion object {
         private var debug: Boolean? = null
         @JvmStatic
+        fun LANGUAGE() = AxMinionsAPI.INSTANCE.getConfig().get("language", "pt_BR")
+        @JvmStatic
         fun AUTO_SAVE_MINUTES() = AxMinionsAPI.INSTANCE.getConfig().get("autosave-minutes", 3L)
         @JvmStatic
         fun MAX_LINKING_DISTANCE() = AxMinionsAPI.INSTANCE.getConfig().get("max-linking-distance", 30)
         @JvmStatic
         fun DEFAULT_MINION_LIMIT() = AxMinionsAPI.INSTANCE.getConfig().get("default-minion-limit", 5)
+        @JvmStatic
+        fun USE_DIALOG_MENU() = AxMinionsAPI.INSTANCE.getConfig().get("use-dialog-menu", true)
         @JvmStatic
         fun ONLY_OWNER_BREAK() = AxMinionsAPI.INSTANCE.getConfig().get("only-owner-break", true)
         @JvmStatic

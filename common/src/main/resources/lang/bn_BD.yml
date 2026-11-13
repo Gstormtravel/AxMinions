@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>প্লাগইন <white><time></white>ms-এ সফলভাবে রিলোড হয়েছে!"
+
+place:
+  success: "<green>নতুন <type> মিনিয়ন সফলভাবে স্থাপন করা হয়েছে! <gray>(<placed>/<max>)"
+  limit-reached: "<red>মিনিয়ন স্থাপন করা যায়নি! আপনি সীমায় পৌঁছে গেছেন! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>মিনিয়ন স্থাপন করা যায়নি! এখানে ইতিমধ্যে একটি মিনিয়ন আছে!"
+  missing-permission: "<red>এই মিনিয়ন স্থাপন করার অনুমতি আপনার নেই!"
+  island-limit-reached: "<red>দ্বীপের মিনিয়ন সীমা পূর্ণ হয়েছে! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>মিনিয়ন সফলভাবে তোলা হয়েছে! <gray>(<placed>/<max>)"
+  with-tool: "<green>টুলসহ মিনিয়ন সফলভাবে সংরক্ষণ করে তোলা হয়েছে!"
+  without-tool: "<green>মিনিয়ন তোলা হয়েছে! টুলটি আলাদাভাবে আপনার ইনভেন্টরিতে ফিরে দেওয়া হয়েছে।"
+
+errors:
+  inventory-full: "<red>আপনার ইনভেন্টরিতে যথেষ্ট জায়গা নেই! আগে কিছু জায়গা খালি করুন!"
+  give-max-level: "<red>এই মিনিয়নের সর্বোচ্চ লেভেল <max_level>! আপনি <level> দেওয়ার চেষ্টা করেছেন।"
+
+convert:
+  start: "<green>ডেটা রূপান্তর শুরু হচ্ছে..."
+  finish: "<green>ডেটা রূপান্তর সফলভাবে সম্পন্ন হয়েছে!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>মিনিয়নকে একটি কনটেইনারের সাথে সংযুক্ত করুন </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>মিনিয়নের একটি টুল প্রয়োজন </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>মিনিয়নের কাছে পানি থাকা প্রয়োজন </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>এই মিনিয়নের কনটেইনার পূর্ণ </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>মিনিয়নের চার্জ শেষ! পুনরায় চার্জ করুন!</#FFAAAA>⚠"
+
+time:
+  day: "দি"
+  hour: "ঘ"
+  minute: "মি"
+  second: "সে"
+
+statistics: "<white>সক্রিয় মিনিয়ন: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>নিষ্ক্রিয় মিনিয়ন: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>মোট: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>মিনিয়ন সফলভাবে <white><level></white> লেভেলে আপগ্রেড হয়েছে!"
+  limit-reached: "<red>এই মিনিয়ন ইতিমধ্যে সর্বোচ্চ লেভেলে পৌঁছেছে!"
+  fail: "<red>আপগ্রেড করার জন্য পর্যাপ্ত অ্যাকশন বা টাকা নেই!"
+
+link:
+  success: "<green>মিনিয়ন সফলভাবে কনটেইনারের সাথে যুক্ত হয়েছে!"
+  unlink: "<green>আপনি মিনিয়নের সংযোগ বিচ্ছিন্ন করেছেন।"
+  fail: "<red>এই ব্লকের সাথে যুক্ত করা সম্ভব নয়! খুব দূরে বা কনটেইনার নয়!"
+  start: "<green>সংযোগ শুরু! একটি কনটেইনারে ক্লিক করুন!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>আপনার মিনিয়ন মেনু মোড <aqua><mode></aqua>-এ সেট করা হয়েছে!"
+  mode-bedrock: "<yellow>আপনি Bedrock/Geyser দিয়ে খেলছেন — ক্লাসিক GUI মেনু স্বয়ংক্রিয়ভাবে রাখা হয়েছে।"
+  mode-old-client: "<yellow>আপনার ক্লায়েন্ট বা সার্ভার বর্তমানে শুধুমাত্র ক্লাসিক মেনু (GUI) ব্যবহার করে।"
+
+skills:
+  upgraded: "<green>আপনি <skill> <green>টিয়ার <white><tier>/<max_tier></white>-এ আপগ্রেড করেছেন!"
+  no-points: "<red>পর্যাপ্ত পয়েন্ট নেই! প্রয়োজন <white><cost></white>, আছে <white><available></white>।"
+  max-tier: "<yellow>এই দক্ষতা ইতিমধ্যে সর্বোচ্চ টিয়ারে আছে!"
+  locked-level: "<red>এই ক্ষমতা আনলক করতে মিনিয়ন লেভেল <white><level></white> প্রয়োজন!"
+  respec-success: "<green>রিসেট সম্পন্ন! <white><points></white> পয়েন্ট ফেরত দেওয়া হয়েছে।"
+  respec-fail-money: "<red>রিসেট করার জন্য যথেষ্ট টাকা নেই! ফি: <white><cost>$</white>।"
+  nothing-to-respec: "<yellow>এই মিনিয়নে এখনো কোনো পয়েন্ট বিনিয়োগ করা হয়নি!"
+
+directions:
+  north: "উত্তর"
+  east: "পূর্ব"
+  south: "দক্ষিণ"
+  west: "পশ্চিম"
+
+charge:
+  charge: "<green>মিনিয়নে <white>৩০ মিনিট</white> চার্জ যোগ করা হয়েছে!"
+  not-enough-money: "<red>মিনিয়ন চার্জ করার জন্য যথেষ্ট টাকা নেই!"
+  not-enough-time-passed: "<red>মিনিয়ন প্রায় পূর্ণ চার্জ আছে! কিছুক্ষণ পর আবার চেষ্টা করুন!"
+
+tools:
+  wrong-tool: "<red>এই আইটেমটি মিনিয়নের টুল হিসেবে ব্যবহার করা যাবে না!"
+  stored-lore: "<gray>সংরক্ষিত টুল: <white><tool>"
+
+tool-names:
+  "none": "কিছুই না"
+  "wooden sword": "কাঠের তলোয়ার"
+  "wooden pickaxe": "কাঠের গাইঁতি"
+  "wooden axe": "কাঠের কুড়াল"
+  "wooden hoe": "কাঠের কোদাল"
+  "wooden shovel": "কাঠের বেলচা"
+  "copper sword": "তামার তলোয়ার"
+  "copper pickaxe": "তামার গাঁইতি"
+  "copper axe": "তামার কুঠার"
+  "copper hoe": "তামার নিড়ানি"
+  "copper shovel": "তামার বেলচা"
+  "stone sword": "পাথরের তলোয়ার"
+  "stone pickaxe": "পাথরের গাইঁতি"
+  "stone axe": "পাথরের কুড়াল"
+  "stone hoe": "পাথরের কোদাল"
+  "stone shovel": "পাথরের বেলচা"
+  "iron sword": "লোহার তলোয়ার"
+  "iron pickaxe": "লোহার গাইঁতি"
+  "iron axe": "লোহার কুড়াল"
+  "iron hoe": "লোহার কোদাল"
+  "iron shovel": "লোহার বেলচা"
+  "golden sword": "সোনার তলোয়ার"
+  "golden pickaxe": "সোনার গাইঁতি"
+  "golden axe": "সোনার কুড়াল"
+  "golden hoe": "সোনার কোদাল"
+  "golden shovel": "সোনার বেলচা"
+  "diamond sword": "হীরার তলোয়ার"
+  "diamond pickaxe": "হীরার গাইঁতি"
+  "diamond axe": "হীরার কুড়াল"
+  "diamond hoe": "হীরার কোদাল"
+  "diamond shovel": "হীরার বেলচা"
+  "netherite sword": "নেদারাইটের তলোয়ার"
+  "netherite pickaxe": "নেদারাইটের গাইঁতি"
+  "netherite axe": "নেদারাইটের কুড়াল"
+  "netherite hoe": "নেদারাইটের কোদাল"
+  "netherite shovel": "নেদারাইটের বেলচা"
+  "fishing rod": "মাছ ধরার ছিপ"
+  "shears": "কাঁচি"
+  "ender eye": "এন্ডার আই"
+  "blaze rod": "ব্লেজ রড"
+  "bow": "ধনুক"
+  "crossbow": "ক্রসবো"
+  "trident": "ত্রিশূল"
+  "mace": "গদা"
+  "stick": "লাঠি"
+
+reset: "<green><player>-এর মিনিয়ন সংখ্যা রিসেট করা হয়েছে!"
+not-on-island: "<#FF0000>আপনি বর্তমানে কোনো দ্বীপে নেই!"
+slot-give: "<green><player>-কে <amount>টি দ্বীপ মিনিয়ন স্লট দেওয়া হয়েছে!"
+slot-receive: "<green>আপনি <amount>টি নতুন দ্বীপ মিনিয়ন স্লট পেয়েছেন! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

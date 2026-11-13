@@ -57,6 +57,12 @@ class LinkingListener : Listener {
         }
 
         event.player.sendMessage(StringUtils.formatToString(Messages.PREFIX() + Messages.LINK_SUCCESS()))
-        minion.setLinkedChest(event.clickedBlock!!.location)
+        val chestLoc = event.clickedBlock!!.location
+        minion.setLinkedChest(chestLoc)
+        com.artillexstudios.axminions.logging.MinionLogger.log(
+            minion,
+            "LINK_CHEST",
+            "Baú vinculado em ${chestLoc.world?.name}:${chestLoc.blockX},${chestLoc.blockY},${chestLoc.blockZ} por ${event.player.name}."
+        )
     }
 }

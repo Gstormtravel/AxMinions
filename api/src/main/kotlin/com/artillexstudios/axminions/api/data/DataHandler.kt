@@ -44,5 +44,9 @@ interface DataHandler {
 
     fun getExtraSlots(user: UUID): Int
 
+    fun getUserMenuMode(user: UUID): String?
+
+    fun setUserMenuMode(user: UUID, name: String, mode: String)
+
     fun disable()
 }

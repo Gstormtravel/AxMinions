@@ -13,6 +13,7 @@ import com.artillexstudios.axminions.integrations.placeholder.PlaceholderAPIInte
 import com.artillexstudios.axminions.integrations.prices.CMIIntegration
 import com.artillexstudios.axminions.integrations.prices.EconomyShopGUIIntegration
 import com.artillexstudios.axminions.integrations.prices.EssentialsIntegration
+import com.artillexstudios.axminions.integrations.prices.HeroVenderIntegration
 import com.artillexstudios.axminions.integrations.prices.ShopGUIPlusIntegration
 //import com.artillexstudios.axminions.integrations.prices.ZShopIntegration
 import com.artillexstudios.axminions.integrations.protection.BentoBoxIntegration
@@ -26,6 +27,7 @@ import com.artillexstudios.axminions.integrations.protection.WorldGuardIntegrati
 import com.artillexstudios.axminions.integrations.stacker.DefaultStackerIntegration
 import com.artillexstudios.axminions.integrations.stacker.RoseStackerIntegration
 import com.artillexstudios.axminions.integrations.stacker.WildStackerIntegration
+import com.artillexstudios.axminions.integrations.stacker.ItemStackIntegration
 import com.artillexstudios.axminions.listeners.SuperiorSkyBlock2Listener
 import java.util.Locale
 import org.bukkit.Bukkit
@@ -60,6 +62,9 @@ class Integrations : Integrations {
     }
 
     override fun reload() {
+        // ============================================================
+        // STACKER HOOK
+        // ============================================================
         when (Config.STACKER_HOOK().lowercase(Locale.ENGLISH)) {
             "rosestacker" -> {
                 if (isPluginLoaded("RoseStacker")) {
@@ -81,12 +86,33 @@ class Integrations : Integrations {
                 }
             }
 
+            "itemstacker", "itemstack" -> {
+                if (isPluginLoaded("ItemStacker")) {
+                    register(ItemStackIntegration())
+                    Bukkit.getConsoleSender()
+                        .sendMessage(StringUtils.formatToString("<#33FF33>[AxMinions] Hooked into ItemStacker!"))
+                } else {
+                    register(DefaultStackerIntegration())
+                }
+            }
+
             else -> {
                 register(DefaultStackerIntegration())
             }
         }
 
+        // ============================================================
+        // PRICES HOOK
+        // ============================================================
         when (Config.PRICES_HOOK().lowercase(Locale.ENGLISH)) {
+            "herovender" -> {
+                if (isPluginLoaded("HeroVender")) {
+                    register(HeroVenderIntegration())
+                    Bukkit.getConsoleSender()
+                        .sendMessage(StringUtils.formatToString("<#33FF33>[AxMinions] Hooked into HeroVender!"))
+                }
+            }
+
             "shopguiplus", "shopgui+" -> {
                 if (isPluginLoaded("ShopGuiPlus")) {
                     register(ShopGUIPlusIntegration())
@@ -126,6 +152,9 @@ class Integrations : Integrations {
 //            }
         }
 
+        // ============================================================
+        // ECONOMY HOOK
+        // ============================================================
         when (Config.ECONOMY_HOOK().lowercase(Locale.ENGLISH)) {
             "vault" -> {
                 if (isPluginLoaded("Vault")) {
@@ -144,6 +173,9 @@ class Integrations : Integrations {
             }
         }
 
+        // ============================================================
+        // PROTECTION / ISLAND INTEGRATIONS
+        // ============================================================
         protectionIntegrations.clear()
 
         if (Bukkit.getPluginManager().getPlugin("SuperiorSkyblock2") != null) {
@@ -195,12 +227,6 @@ class Integrations : Integrations {
             kGeneratorsIntegration = true
             Bukkit.getConsoleSender()
                 .sendMessage(StringUtils.formatToString("<#33FF33>[AxMinions] Hooked into KGenerators!"))
-        }
-
-        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
-            itemsAdderIntegration = true
-            Bukkit.getConsoleSender()
-                .sendMessage(StringUtils.formatToString("<#33FF33>[AxMinions] Hooked into ItemsAdder!"))
         }
 
         if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {

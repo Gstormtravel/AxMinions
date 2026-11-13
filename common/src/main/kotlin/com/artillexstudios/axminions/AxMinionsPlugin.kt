@@ -50,6 +50,37 @@ class AxMinionsPlugin : AxPlugin() {
         lateinit var integrations: Integrations
     }
 
+    fun reloadMessages() {
+        val langDir = File(dataFolder, "lang")
+        if (!langDir.exists()) {
+            langDir.mkdirs()
+        }
+
+        val bundledLanguages = arrayOf(
+            "pt_BR", "en_US", "es_ES", "zh_CN", "hi_IN",
+            "fr_FR", "ar_SA", "bn_BD", "ru_RU", "id_ID", "de_DE"
+        )
+        for (code in bundledLanguages) {
+            val langFile = File(langDir, "$code.yml")
+            if (!langFile.exists()) {
+                getResource("lang/$code.yml")?.use { input ->
+                    langFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            }
+        }
+
+        val selected = Config.LANGUAGE().trim().removeSuffix(".yml").ifBlank { "pt_BR" }
+        val targetFile = File(langDir, "$selected.yml")
+        val defaultStream = getResource("lang/$selected.yml")
+            ?: getResource("lang/pt_BR.yml")
+            ?: getResource("lang/en_US.yml")
+            ?: getResource("messages.yml")!!
+
+        messages = Messages(targetFile, defaultStream)
+    }
+
     override fun dependencies(manager: DependencyManagerWrapper) {
         manager.dependency("org{}jetbrains{}kotlin:kotlin-stdlib:2.3.21")
         manager.dependency("com{}h2database:h2:2.2.220")
@@ -69,11 +100,15 @@ class AxMinionsPlugin : AxPlugin() {
     }
 
     override fun enable() {
+        try {
+            Class.forName("com.artillexstudios.axminions.libs.axapi.gui.inventory.InventoryUpdater")
+        } catch (_: Throwable) {}
+
         Metrics(this, 19043)
         com.artillexstudios.axapi.metrics.AxMetrics(this, 5).start()
 
         AxMinionsPlugin.config = Config(File(dataFolder, "config.yml"), getResource("config.yml")!!)
-        messages = Messages(File(dataFolder, "messages.yml"), getResource("messages.yml")!!)
+        reloadMessages()
         integrations = Integrations()
         integrations.reload()
 
@@ -136,6 +171,16 @@ class AxMinionsPlugin : AxPlugin() {
 
         MinionTicker.startTicking()
 
+        // Sincronização pós-boot com delay (5 segundos / 100 ticks):
+        // Garante que o Paper termine de carregar mundos, chunks e tile entities
+        // e força a atualização de todos os baús vinculados.
+        Scheduler.get().runLater({ _ ->
+            Bukkit.getLogger().info("[AxMinions] Executando sincronização pós-boot de recipientes vinculados...")
+            Minions.getMinions().fastFor { minion ->
+                (minion as? Minion)?.updateLinkedInventory()
+            }
+        }, 100)
+
         Scheduler.get().runTimer({ task ->
             dataQueue.submit {
                 Minions.get {
@@ -165,6 +210,7 @@ class AxMinionsPlugin : AxPlugin() {
         }
 
         dataHandler.disable()
+        com.artillexstudios.axminions.logging.MinionLogger.shutdown()
     }
 
     private fun loadDataHandler() {

@@ -16,4 +16,12 @@ object Keys {
     val PLACED = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "placed")
     @JvmField
     val CHARGE = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "charge")
+    @JvmField
+    val SKILLS = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "skills")
+    @JvmField
+    val TOOL = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "tool")
+    @JvmField
+    val FIRST_OWNER = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "first_owner")
+    @JvmField
+    val OWNER_HISTORY = NamespacedKey(AxMinionsAPI.INSTANCE.getAxMinionsInstance(), "owner_history")
 }

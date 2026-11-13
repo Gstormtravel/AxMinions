@@ -1,11 +1,13 @@
 package com.artillexstudios.axminions.nms
 
 import com.artillexstudios.axapi.utils.Version
+import com.artillexstudios.axminions.api.menus.MinionDialogSpec
 import com.artillexstudios.axminions.api.minions.Minion
 import java.util.UUID
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 interface NMSHandler {
@@ -29,4 +31,8 @@ interface NMSHandler {
     fun getMinion(): Minion?
 
     fun getExp(block: Block, itemStack: ItemStack): Int
+
+    fun getDrops(block: Block, itemStack: ItemStack): List<ItemStack>
+
+    fun openMinionDialog(player: Player, spec: MinionDialogSpec): Boolean = false
 }

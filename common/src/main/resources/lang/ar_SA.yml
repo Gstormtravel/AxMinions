@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>تمت إعادة تحميل الإضافة بنجاح خلال <white><time></white> مللي ثانية!"
+
+place:
+  success: "<green>تم وضع المينيون الجديد <type> بنجاح! <gray>(<placed>/<max>)"
+  limit-reached: "<red>تعذر وضع المينيون! لقد وصلت إلى الحد الأقصى! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>تعذر وضع المينيون! يوجد مينيون بالفعل في هذا الموقع!"
+  missing-permission: "<red>ليس لديك الصلاحية اللازمة لوضع هذا المينيون!"
+  island-limit-reached: "<red>لقد وصلت إلى حد المينيون للجزيرة! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>تم استرجاع المينيون بنجاح! <gray>(<placed>/<max>)"
+  with-tool: "<green>تم استرجاع المينيون مع حفظ الأداة بداخله!"
+  without-tool: "<green>تم استرجاع المينيون! تم إرجاع الأداة بشكل منفصل إلى حقيبتك."
+
+errors:
+  inventory-full: "<red>ليس لديك مساحة كافية في الحقيبة! قم بتفريغ مساحة أولاً!"
+  give-max-level: "<red>الحد الأقصى لمستوى هذا المينيون هو <max_level>! حاولت تعيين <level>."
+
+convert:
+  start: "<green>جارٍ بدء تحويل البيانات..."
+  finish: "<green>اكتمل تحويل البيانات بنجاح!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>يجب ربط المينيون بصندوق تخزين </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>يحتاج المينيون إلى أداة </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>يحتاج المينيون إلى ماء قريب </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>صندوق هذا المينيون ممتلئ </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>نفدت طاقة المينيون! أعد شحنه!</#FFAAAA>⚠"
+
+time:
+  day: "ي"
+  hour: "س"
+  minute: "د"
+  second: "ث"
+
+statistics: "<white>المينيون النشطون: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>المينيون المتوقفون: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>الإجمالي: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>تمت ترقية المينيون بنجاح إلى المستوى <white><level></white>!"
+  limit-reached: "<red>لقد وصل هذا المينيون إلى المستوى الأقصى بالفعل!"
+  fail: "<red>لا يملك المينيون إجراءات كافية أو ليس لديك مال كافٍ للترقية!"
+
+link:
+  success: "<green>تم ربط المينيون بالصندوق بنجاح!"
+  unlink: "<green>تم فك ارتباط المينيون."
+  fail: "<red>لا يمكن الربط بهذه الكتلة! بعيد جداً أو ليس صندوقاً!"
+  start: "<green>بدأ الربط! انقر على صندوق!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>تم تغيير وضع قائمة المينيون إلى <aqua><mode></aqua>!"
+  mode-bedrock: "<yellow>أنت تلعب عبر Bedrock/Geyser — يتم الاحتفاظ بقائمة GUI الكلاسيكية تلقائياً."
+  mode-old-client: "<yellow>عميلك أو الخادم يستخدم القائمة الكلاسيكية (GUI) فقط حالياً."
+
+skills:
+  upgraded: "<green>لقد قمت بترقية <skill> <green>إلى المستوى <white><tier>/<max_tier></white>!"
+  no-points: "<red>نقاط غير كافية! المطلوب <white><cost></white>، المتاح <white><available></white>."
+  max-tier: "<yellow>هذه المهارة وصلت للحد الأقصى بالفعل!"
+  locked-level: "<red>يحتاج المينيون إلى المستوى <white><level></white> لفتح هذه القدرة!"
+  respec-success: "<green>اكتملت إعادة التعيين! تم إرجاع <white><points></white> نقطة."
+  respec-fail-money: "<red>المال غير كافٍ لإعادة التعيين! الرسوم: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>لا يمتلك هذا المينيون نقاطاً مستثمرة لإعادتها!"
+
+directions:
+  north: "شمال"
+  east: "شرق"
+  south: "جنوب"
+  west: "غرب"
+
+charge:
+  charge: "<green>أضفت <white>30 دقيقة</white> من الشحن للمينيون!"
+  not-enough-money: "<red>ليس لديك مال كافٍ لشحن هذا المينيون!"
+  not-enough-time-passed: "<red>المينيون مشحون بالكامل تقريباً! انتظر قليلاً قبل إعادة الشحن!"
+
+tools:
+  wrong-tool: "<red>لا يمكنك وضع هذا العنصر كأداة لهذا المينيون!"
+  stored-lore: "<gray>الأداة المحفوظة: <white><tool>"
+
+tool-names:
+  "none": "لا يوجد"
+  "wooden sword": "سيف خشبي"
+  "wooden pickaxe": "معول خشبي"
+  "wooden axe": "فأس خشبي"
+  "wooden hoe": "معزقة خشبي"
+  "wooden shovel": "مجرفة خشبي"
+  "copper sword": "سيف نحاسي"
+  "copper pickaxe": "فأس نحاسي"
+  "copper axe": "بلطة نحاسية"
+  "copper hoe": "معزقة نحاسية"
+  "copper shovel": "مجرفة نحاسية"
+  "stone sword": "سيف حجري"
+  "stone pickaxe": "معول حجري"
+  "stone axe": "فأس حجري"
+  "stone hoe": "معزقة حجري"
+  "stone shovel": "مجرفة حجري"
+  "iron sword": "سيف حديدي"
+  "iron pickaxe": "معول حديدي"
+  "iron axe": "فأس حديدي"
+  "iron hoe": "معزقة حديدي"
+  "iron shovel": "مجرفة حديدي"
+  "golden sword": "سيف ذهبي"
+  "golden pickaxe": "معول ذهبي"
+  "golden axe": "فأس ذهبي"
+  "golden hoe": "معزقة ذهبي"
+  "golden shovel": "مجرفة ذهبي"
+  "diamond sword": "سيف ألماس"
+  "diamond pickaxe": "معول ألماس"
+  "diamond axe": "فأس ألماس"
+  "diamond hoe": "معزقة ألماس"
+  "diamond shovel": "مجرفة ألماس"
+  "netherite sword": "سيف نيذرايت"
+  "netherite pickaxe": "معول نيذرايت"
+  "netherite axe": "فأس نيذرايت"
+  "netherite hoe": "معزقة نيذرايت"
+  "netherite shovel": "مجرفة نيذرايت"
+  "fishing rod": "صنارة صيد"
+  "shears": "مقص"
+  "ender eye": "عين الإندر"
+  "blaze rod": "عصا البليز"
+  "bow": "قوس"
+  "crossbow": "قوس مستعرض"
+  "trident": "رمح ثلاثي"
+  "mace": "صولجان"
+  "stick": "عصا"
+
+reset: "<green>لقد قمت بإعادة تعيين عدد مينيون اللاعب <player>!"
+not-on-island: "<#FF0000>أنت لست في جزيرة حالياً!"
+slot-give: "<green>منحت <amount> خانات مينيون للجزيرة للاعب <player>!"
+slot-receive: "<green>حصلت على <amount> خانات مينيون جديدة للجزيرة! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

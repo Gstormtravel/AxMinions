@@ -13,8 +13,28 @@ class WildStackerIntegration : StackerIntegration {
         return WildStackerAPI.getStackedEntity(entity)?.stackAmount?.toLong() ?: 1
     }
 
+    fun calculateStackedExp(entity: LivingEntity, baseExp: Int): Int {
+        val stacked = try {
+            WildStackerAPI.getStackedEntity(entity)
+        } catch (_: Throwable) {
+            null
+        } ?: return baseExp
+
+        val amount = stacked.stackAmount.coerceAtLeast(1)
+        if (amount <= 1) return baseExp
+
+        val wsExp = try {
+            stacked.getExp(amount, baseExp)
+        } catch (_: Throwable) {
+            0
+        }
+
+        val fallback = (baseExp.coerceAtLeast(1)) * amount
+        return if (wsExp >= fallback) wsExp else fallback
+    }
+
     override fun getStackSize(item: Item): Long {
-        return WildStackerAPI.getStackedItem(item)?.stackAmount?.toLong() ?: 1
+        return WildStackerAPI.getStackedItem(item)?.stackAmount?.toLong() ?: item.itemStack.amount.toLong()
     }
 
     override fun setStackSize(item: Item, amount: Int) {

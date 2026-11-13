@@ -1,90 +1,94 @@
-# How often should the plugin save all minions?
-# The plugin saves changes live, this is only for updating minion stats in the database.
-# For this change to take effect, you need to restart your server!
+# Com que frequência o plugin deve salvar todos os minions?
+# O plugin salva as alterações em tempo real, isto serve apenas para atualizar as estatísticas dos minions no banco de dados.
+# Para esta alteração ter efeito, você precisa reiniciar o seu servidor!
 auto-save-minutes: 3
 
-# How far the storage chest can be from the minion
+# Idioma das mensagens do plugin (arquivos em plugins/AxMinions/lang/<idioma>.yml)
+# Disponíveis: pt_BR, en_US, es_ES, zh_CN, hi_IN, fr_FR, ar_SA, bn_BD, ru_RU, id_ID, de_DE
+language: pt_BR
+
+# Quão longe o baú de armazenamento pode estar do minion
 max-linking-distance: 30
 
-# If players need to have 'axminions.place.<minion>' permission
-# to be able to place this minion
+# Se os jogadores precisam ter a permissão 'axminions.place.<minion>'
+# para poderem colocar este minion
 place-permissions: false
 
-# The default amount of minions a player can have.
-# This setting can be overwritten by setting the 'axminions.limit.<amount>' permission!
+# A quantidade padrão de minions que um jogador pode ter.
+# Esta configuração pode ser substituída definindo a permissão 'axminions.limit.<amount>'!
 default-minion-limit: 5
 
-# If true, only the owner of this minion can break it
-# If false, everyone, who can break blocks at said location can break this minion
-# You should enable this, if you aren't using a supported protection plugin!
+# Se verdadeiro, apenas o dono deste minion pode quebrá-lo
+# Se falso, todos que puderem quebrar blocos no referido local poderão quebrar este minion
+# Você deve ativar isto se não estiver usando um plugin de proteção compatível!
 only-owner-break: true
 
-# If true, only the owner of this minion can open it's GUI
-# If false, everyone, who can break blocks at said location can open the GUI of this minion
-# You should enable this, if you aren't using a supported protection plugin!
+# Se verdadeiro, apenas o dono deste minion pode abrir a interface dele
+# Se falso, todos que puderem quebrar blocos no referido local poderão abrir a interface deste minion
+# Você deve ativar isto se não estiver usando um plugin de proteção compatível!
 only-owner-gui: true
 
-# Should minions show holograms if they have an issue?
-# (They won't complain about not having a girlfriend, though!)
-# You can configure these messages in the messages.yml
+# Os minions devem mostrar hologramas se tiverem algum problema?
+# (Eles não vão reclamar sobre não terem uma namorada, no entanto!)
+# Você pode configurar estas mensagens no messages.yml
 display-warnings: true
 
-# If set to true, the minion will not break the tool, it will just stay at 1 durability (and the minion will be stopped)
-# If set to false, the minion can break the tool
+# Se definido como verdadeiro, o minion não quebrará a ferramenta, ela ficará apenas com 1 de durabilidade (e o minion será parado)
+# Se definido como falso, o minion pode quebrar a ferramenta
 can-break-tools: true
 
-# The limit to use for islands
+# O limite a ser usado para ilhas
 island-limit: 10
 
-# If the minion should be able to take durability from it's held item
+# Se o minion deve ser capaz de retirar durabilidade do item que está segurando
 use-durability: true
 
-# If the minion should pull new tools from the chest it's connected to
+# Se o minion deve puxar novas ferramentas do baú ao qual está conectado
 pull-tools-from-chest: false
 
-# If the minion should work when the owner is offline (only if the chunk is loaded)
+# Se o minion deve trabalhar quando o dono estiver offline (apenas se a chunk estiver carregada)
 work-when-owner-offline: true
 
-# The maximum amount of blocks a single lumber minion may break at a time
+# A quantidade máxima de blocos que um único minion lenhador pode quebrar por vez
 max-breaks-per-tick: 200
 
-# What type of message we should send when the upgrade fails
-# due to insufficient funds
-# Possible options: chat, title, subtitle, actionbar
+# Que tipo de mensagem devemos enviar quando a melhoria falhar
+# devido a fundos insuficientes
+# Opções possíveis: chat, title, subtitle, actionbar
 upgrade-fail: "chat"
 
-# The sound played when you upgrade a minion
-# set to "" to disable!
-# For a list of sounds visit: https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
+# O som reproduzido quando você melhora um minion
+# defina como "" para desativar!
+# Para uma lista de sons visite: https://jd.papermc.io/paper/1.20/org/bukkit/Sound.html
 upgrade-sound: "ENTITY_PLAYER_LEVELUP"
 
 database:
-  # Can be H2 (SqLite support is planned)
+  # Pode ser H2 (Suporte a Sqlite está planejado)
   type: "H2"
 
 hooks:
-  # Supported stacker plugins: WildStacker, RoseStacker, none
+  # Plugins de stacker suportados: WildStacker, RoseStacker, ItemStacker, none
   stacker: "none"
-  # Supported economy providers: Vault, PlayerPoints, custom
+  # Provedores de economia suportados: Vault, PlayerPoints, custom
   economy: "Vault"
-  # Supported prices providers: ShopGUIPlus, Essentials, EconomyShopGUI, CMI, custom
-  prices: "ShopGUIPlus"
+  # Provedores de preços suportados: HeroVender, ShopGUIPlus, Essentials, EconomyShopGUI, CMI, custom
+  prices: "HeroVender"
 
 charge:
   enabled: false
-  amount: 1800 # in seconds
-  max-charge: 1440 # in minutes
+  amount: 1800 # em segundos
+  max-charge: 1440 # em minutos
   price: 10000
-  minimum-charge: 30 # in seconds
+  minimum-charge: 30 # em segundos
   items:
     1:
-      type: coal
-      name: "<red>Fuel"
-      charge: 1000 # In seconds
+      type: cooked_beef
+      name: "<red>Combustível"
+      charge: 1000 # Em segundos
 
-# 1 - HH:MM:SS, for example 01:25:35
-# 2 - short format, for example 20m
-# 3 - text format, for example 01h 25m 35s
+# 1 - HH:MM:SS, por exemplo 01:25:35
+# 2 - formato curto, por exemplo 20m
+# 3 - formato de texto, por exemplo 01h 25m 35s
 timer-format: 1
 
 gui:
@@ -95,43 +99,81 @@ gui:
       name: ""
     rotate:
       type: "ender_eye"
-      name: "<#33FF33><b>Rotate"
+      name: "<#33FF33><b>Rotacionar"
       lore:
         - ""
-        - " <gray>- <white>Current: <#33FF33><direction>"
+        - " <gray>- <white>Atual: <#33FF33><direction>"
         - ""
-        - "<#33FF33><b>(!)</b> Click here to rotate your minion!"
+        - "<#33FF33><b>(!)</b> Clique aqui para rotacionar o seu minion!"
       slot: 10
     link:
       type: "chest"
-      name: "<#FFCC00><b>Link to container"
+      name: "<#FFCC00><b>Vincular ao recipiente"
       lore:
         - ""
         - " <gray>- <white>Status: <#FFCC00><linked>"
         - ""
-        - "<#FFCC00><b>(!)</b> Click here to link your minion to a container!"
+        - "<#FFCC00><b>(!)</b> Clique aqui para vincular o seu minion a um recipiente!"
       slot: 11
     item:
       type: "air"
       slot: 13
     charge:
       type: "lava_bucket"
-      name: "<#FB8E08><b>Charge"
+      name: "<#FB8E08><b>Carregar"
       lore:
         - ""
-        - " <gray>- <white>Current charge: <#FFCC00><charge>"
+        - " <gray>- <white>Carga atual: <#FFCC00><charge>"
         - ""
-        - "<#FB8E08><b>(!)</b> Click here to charge your minion for <white>30 minutes</white>!"
+        - "<#FB8E08><b>(!)</b> Clique aqui para carregar o seu minion por <white>30 minutos</white>!"
       slot: 9
 
-    # These settings are minion-specific, you can edit them in each minion's file!
+    # Estas configurações são específicas de cada minion, você pode editá-las no arquivo de cada minion!
     upgrade:
       slot: 15
     statistics:
       slot: 16
-# Only change this, if you are asked to! This will make your performance worse, and will spam messages in your console!
-# Requires restart!
+    abilities:
+      type: nether_star
+      name: <#00EEFF><b>✦ Habilidades & Pontos
+      lore:
+      - ''
+      - ' <gray>- <white>Pontos disponíveis: <#55FF55><skill_points>'
+      - ''
+      - ' <gray>Cada nível concede pontos para evoluir'
+      - ' <gray>atributos e desbloquear poderes especiais!'
+      - ''
+      - <#00EEFF><b>(!)</b> Clique aqui para abrir a árvore de habilidades!
+      slot: 14
+    pickup:
+      type: chest_minecart
+      name: <#FF5555><b>⛏ Recolher Minion
+      lore:
+      - ''
+      - ' <gray>Escolha entre recolher o minion'
+      - ' <gray>com ou sem a ferramenta guardada.'
+      - ''
+      - <#FF5555><b>(!)</b> Clique aqui para escolher como recolher!
+      slot: 22
+    menu_switch:
+      type: comparator
+      name: <#00CCFF><b>🔄 Trocar para Menu Moderno
+      lore:
+      - ''
+      - ' <gray>Alterna este menu clássico para o'
+      - ' <aqua>Painel Nativo Moderno (Dialog)</aqua>!'
+      - ''
+      - <#00CCFF><b>(!)</b> Clique aqui para alternar o estilo do menu!
+      slot: 26
+
+# Sistema de Menu Moderno (Vanilla Dialog API estilo EliteMobs)
+# true  = Ativa o sistema de menu novo para jogadores Java 1.21.6+ (Bedrock continua recebendo GUI automaticamente)
+# false = Desativa o menu novo globalmente; todos os jogadores utilizam apenas o menu GUI clássico
+use-dialog-menu: true
+
+# Altere isto apenas se lhe for pedido! Isto tornará o seu desempenho pior e enviará mensagens de spam no seu console!
+# Requer reinicialização!
 debug: false
 
-# Do not change!
-config-version: 10
+# Não alterar!
+config-version: 11

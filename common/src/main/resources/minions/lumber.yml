@@ -1,13 +1,14 @@
-name: "<#00AAFF>Lumberjack <white>Minion"
+name: "<#00AAFF>Minion <white>Lenhador"
 
 entity:
-  name: "<level_color>[<level>] <#00AAFF>Lumberjack <white>Minion <gray>[<owner>]"
+  name: "<level_color>[<level>] <#00AAFF>Minion <white>Lenhador <gray>[<owner>]"
 
 tool:
   material:
     - "WOODEN_AXE"
     - "STONE_AXE"
     - "GOLDEN_AXE"
+    - "COPPER_AXE"
     - "IRON_AXE"
     - "DIAMOND_AXE"
     - "NETHERITE_AXE"
@@ -15,124 +16,466 @@ tool:
 item:
   type: "player_head"
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmNjMGE5MTk5MGU3NmM2ZDY1ODA1MGI3YWM3ZTQ4MmJjNTgyYjI0NTg5YmI3ZjE0NmJkMWMwM2I5Yzg0Y2RkOSJ9fX0="
-  name: "<#00AAFF>Lumberjack <white>Minion"
+  name: "<#00AAFF>Minion <white>Lenhador"
   lore:
     - ""
-    - " <gray>- <white>Collects all items around itself."
+    - " <gray>- <white>Corta árvores e madeira ao redor de si."
     - ""
-    - "<#00AAFF>Statistics"
-    - " <#00AAFF>❙ <white>Level: <#FFEEAA><level>"
-    - " <#00AAFF>❙ <white>Broken blocks: <#FFEEAA><actions>"
+    - "<#00AAFF>Estatísticas"
+    - " <#00AAFF>❙ <white>Nível: <#FFEEAA><level>"
+    - " <#00AAFF>❙ <white>Blocos quebrados: <#FFEEAA><actions>"
     - ""
-    - "<#00AAFF><b>(!)</b> Place the minion and give it an axe!"
+    - "<#00AAFF><b>(!)</b> Posicione o minion e dê um machado a ele!"
 
 gui:
   upgrade:
     type: "gold_ingot"
-    name: "<#00CCFF><b>Upgrade minion"
+    name: "<#00CCFF><b>Melhorar minion"
     lore:
       - ""
-      - " <gray>- <white>Level: <green><level> » <dark_green><next_level>"
-      - " <gray>- <white>Range: <green><range> » <dark_green><next_range>"
-      - " <gray>- <white>Speed: <green><speed> » <dark_green><next_speed>"
+      - " <gray>- <white>Nível: <green><level> » <dark_green><next_level>"
+      - " <gray>- <white>Alcance: <green><range> » <dark_green><next_range>"
+      - " <gray>- <white>Velocidade: <green><speed> » <dark_green><next_speed>"
       - ""
-      - "<#00CCFF>Requirements:"
-      - " <gray>- <white>Money: <#33FF33><price>$"
-      - " <gray>- <white>Collected items: <#33FF33><required_actions>"
+      - "<#00CCFF>Requisitos:"
+      - " <gray>- <white>Dinheiro: <#33FF33><price>$"
+      - " <gray>- <white>Blocos quebrados: <#33FF33><required_actions>"
       - ""
-      - "<#00CCFF><b>(!)</b> Click here to upgrade your minion!"
+      - "<#00CCFF><b>(!)</b> Clique aqui para melhorar o seu minion!"
   statistics:
     type: "paper"
-    name: "<#00AAFF><b>Statistics"
+    name: "<#00AAFF><b>Estatísticas"
     lore:
       - ""
-      - " <gray>- <white>Broken blocks: <#00AAFF><actions>"
+      - " <gray>- <white>Blocos quebrados: <#00AAFF><actions>"
       - ""
 
 upgrades:
-  1:
-    range: 3
-    speed: 200
+  '1':
+    range: 1.5
+    speed: 240
+    storage: 200
     items:
       helmet:
-        type: "player_head"
+        type: player_head
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmNjMGE5MTk5MGU3NmM2ZDY1ODA1MGI3YWM3ZTQ4MmJjNTgyYjI0NTg5YmI3ZjE0NmJkMWMwM2I5Yzg0Y2RkOSJ9fX0="
       chestplate:
-        type: "leather_chestplate"
-        color: "0, 200, 255"
+        type: leather_chestplate
+        color: 0, 200, 255
         glow: false
       leggings:
-        type: "leather_leggings"
-        color: "0, 200, 255"
+        type: leather_leggings
+        color: 0, 200, 255
         glow: false
       boots:
-        type: "leather_boots"
-        color: "0, 200, 255"
+        type: leather_boots
+        color: 0, 200, 255
         glow: false
-  2:
-    range: 4
-    speed: 190
+  '2':
+    range: 1.5
+    speed: 235
+    storage: 300
     requirements:
       money: 1000
       actions: 100
-  3:
-    range: 4
-    speed: 175
+  '3':
+    range: 1.5
+    speed: 230
+    storage: 500
     requirements:
       money: 3000
       actions: 300
-  4:
-    range: 5
-    speed: 160
+  '4':
+    range: 1.5
+    speed: 225
+    storage: 750
     requirements:
       money: 10000
       actions: 1000
-  5:
-    range: 5
-    speed: 150
+  '5':
+    range: 1.5
+    speed: 220
+    storage: 1100
     requirements:
       money: 20000
       actions: 3000
-  6:
-    range: 6
-    speed: 130
+  '6':
+    range: 1.5
+    speed: 215
+    storage: 1500
     requirements:
       money: 50000
       actions: 6000
-  7:
-    range: 6
-    speed: 115
+  '7':
+    range: 1.5
+    speed: 210
+    storage: 1950
     requirements:
       money: 150000
       actions: 10000
-  8:
-    range: 7
-    speed: 100
+  '8':
+    range: 1.5
+    speed: 205
+    storage: 2450
     requirements:
       money: 500000
       actions: 17500
-  9:
-    range: 8
-    speed: 85
+  '9':
+    range: 1.5
+    speed: 200
+    storage: 3050
     requirements:
       money: 1000000
       actions: 25000
-  10:
-    range: 8
-    speed: 60
+  '10':
+    range: 1.5
+    speed: 195
+    storage: 3650
     requirements:
-      money: 5000000
+      money: 2500000
       actions: 50000
     items:
       chestplate:
         type: LEATHER_CHESTPLATE
-        color: "0, 150, 200"
+        color: 0, 150, 200
         glow: true
       leggings:
         type: LEATHER_LEGGINGS
-        color: "0, 150, 200"
+        color: 0, 150, 200
         glow: true
       boots:
         type: LEATHER_BOOTS
-        color: "0, 150, 200"
+        color: 0, 150, 200
         glow: true
+  '11':
+    range: 1.5
+    speed: 195
+    storage: 4300
+    requirements:
+      money: 4000000
+      actions: 65000
+  '12':
+    range: 2.0
+    speed: 190
+    storage: 5000
+    requirements:
+      money: 6000000
+      actions: 85000
+  '13':
+    range: 2.0
+    speed: 185
+    storage: 5750
+    requirements:
+      money: 9000000
+      actions: 110000
+  '14':
+    range: 2.0
+    speed: 180
+    storage: 6500
+    requirements:
+      money: 12500000
+      actions: 140000
+  '15':
+    range: 2.0
+    speed: 175
+    storage: 7350
+    requirements:
+      money: 17500000
+      actions: 175000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 50, 200, 120
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 50, 200, 120
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 50, 200, 120
+        glow: true
+  '16':
+    range: 2.0
+    speed: 170
+    storage: 8200
+    requirements:
+      money: 23000000
+      actions: 215000
+  '17':
+    range: 2.0
+    speed: 165
+    storage: 9100
+    requirements:
+      money: 30000000
+      actions: 260000
+  '18':
+    range: 2.0
+    speed: 160
+    storage: 10000
+    requirements:
+      money: 40000000
+      actions: 310000
+  '19':
+    range: 2.0
+    speed: 155
+    storage: 11000
+    requirements:
+      money: 55000000
+      actions: 365000
+  '20':
+    range: 2.0
+    speed: 150
+    storage: 12000
+    requirements:
+      money: 75000000
+      actions: 425000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 0, 255, 160
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 0, 255, 160
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 0, 255, 160
+        glow: true
+
+skill-system:
+  enabled: true
+  points-per-level: 1
+  bonus-points-levels: [5, 10, 15, 20]
+  respec-cost-money: 1000000
+  stats:
+    speed:
+      display-name: '<#00CCFF>Agilidade de Corte'
+      description:
+      - '<gray>Reduz o tempo entre cortes (-15 ticks/tier).'
+      material: REDSTONE
+      slot: 10
+      max-tier: 6
+      cost-per-tier: [1, 1, 1, 1, 1, 1]
+      modifier-per-tier: -15
+      min-speed-floor: 60
+    range:
+      display-name: '<#55FF55>Raio de Floresta'
+      description:
+      - '<gray>Expande o raio de busca por troncos (+0.75/tier).'
+      material: DIAMOND_AXE
+      slot: 11
+      max-tier: 4
+      cost-per-tier: [2, 2, 3, 3]
+      modifier-per-tier: 0.75
+      max-range-cap: 5.0
+    durability_save:
+      display-name: '<#55FF55>Fio Afiado'
+      description:
+      - '<gray>Chance de preservar o machado (+12.5%/tier).'
+      material: ANVIL
+      slot: 12
+      max-tier: 4
+      cost-per-tier: [1, 1, 1, 1]
+      chance-per-tier: 12.5
+    storage:
+      display-name: '<#FFFF55>Reserva de XP'
+      description:
+      - '<gray>Aumenta a capacidade de XP armazenado (+25%/tier).'
+      material: EXPERIENCE_BOTTLE
+      slot: 13
+      max-tier: 5
+      cost-per-tier: [1, 1, 1, 1, 1]
+      modifier-per-tier: 0.25
+
+custom-abilities:
+  fertilidade_muda:
+    enabled: true
+    slot: 19
+    material: BONE_MEAL
+    display-name: '<#88FF88>Fertilidade da Muda'
+    description:
+    - '<gray>Chance de acelerar mudas próximas usando'
+    - '<gray>efeito de farinha de osso ao cortar troncos.'
+    min-level: 8
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 25
+    chance-per-tier: 25
+    cooldown-seconds: 2
+    effects:
+    - type: BONEMEAL_SAPLING
+  carvoaria_portatil:
+    enabled: true
+    slot: 21
+    material: CHARCOAL
+    display-name: '<#FF8833>Carvoaria Portátil'
+    description:
+    - '<gray>Converte parte das toras cortadas diretamente'
+    - '<gray>em carvão vegetal pronto para combustível.'
+    min-level: 14
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 35
+    chance-per-tier: 30
+    effects:
+    - type: AUTO_SMELT
+  sap_collector:
+    enabled: true
+    slot: 23
+    material: HONEY_BOTTLE
+    display-name: '<#FFBB33>Extrator de Seiva'
+    description:
+    - '<gray>Chance ao cortar troncos de coletar favo de mel,'
+    - '<gray>resina, maçãs ou carvão vegetal bônus.'
+    min-level: 11
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 12
+    chance-per-tier: 11
+    effects:
+    - type: FOREST_SAP_DROP
+  leaf_decay_instant:
+    enabled: true
+    slot: 25
+    material: OAK_LEAVES
+    display-name: '<#77DD77>Vento Cortante'
+    description:
+    - '<gray>Derruba instantaneamente as folhas da copa'
+    - '<gray>junto com mudas, maçãs e gravetos ao cortar.'
+    min-level: 12
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 100
+    effects:
+    - type: CLEAR_TREE_LEAVES
+  auto_charcoal:
+    enabled: true
+    slot: 28
+    material: CAMPFIRE
+    display-name: '<#FF6600>Fornalha Florestal'
+    description:
+    - '<gray>Chance adicional de carbonizar troncos recém'
+    - '<gray>cortados em carvão vegetal.'
+    min-level: 15
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 25
+    chance-per-tier: 25
+    effects:
+    - type: AUTO_SMELT
+  deep_root:
+    enabled: true
+    slot: 30
+    material: MANGROVE_PROPAGULE
+    display-name: '<#55FF88>Broto Acelerado'
+    description:
+    - '<gray>Aumenta em +25%/tier a sorte nos drops'
+    - '<gray>raros florestais (maçãs douradas e resinas).'
+    min-level: 17
+    max-tier: 3
+    cost-per-tier: [2, 3, 3]
+    trigger: ON_ACTION
+    chance: 100
+    effects:
+    - type: LUMBER_RARE_DROP_BOOST
+      amount: 0.25
+  plank_sawmill:
+    enabled: true
+    slot: 32
+    material: OAK_PLANKS
+    display-name: '<#DDAA66>Serraria Portátil'
+    description:
+    - '<gray>Serragem instantânea convertendo toras'
+    - '<gray>cortadas em 4x tábuas automaticamente.'
+    min-level: 18
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 50
+    chance-per-tier: 50
+    effects:
+    - type: LOGS_TO_PLANKS
+  ancient_timber:
+    enabled: true
+    slot: 34
+    material: DIAMOND_AXE
+    display-name: '<#00FFAA>Espírito da Floresta'
+    description:
+    - '<gray>Chance de duplicar toda a madeira e itens'
+    - '<gray>extraídos ao abater uma árvore.'
+    min-level: 20
+    max-tier: 2
+    cost-per-tier: [4, 4]
+    trigger: ON_ACTION
+    chance: 15
+    chance-per-tier: 15
+    effects:
+    - type: MULTIPLY_DROPS
+      factor: 2.0
+
+custom-drops-max-per-catch: 1
+custom-drops:
+  stick_bundle:
+    enabled: true
+    material: STICK
+    chance: 8.5
+    min-level: 1
+    min-amount: 1
+    max-amount: 3
+  fresh_apple:
+    enabled: true
+    material: APPLE
+    chance: 5.5
+    min-level: 1
+    min-amount: 1
+    max-amount: 2
+  poplar_sapling_drop:
+    enabled: true
+    material: POPLAR_SAPLING
+    chance: 2.5
+    min-level: 2
+    min-amount: 1
+    max-amount: 1
+  charcoal_chunk:
+    enabled: true
+    material: CHARCOAL
+    chance: 3.0
+    min-level: 3
+    min-amount: 1
+    max-amount: 2
+  honeycomb_drop:
+    enabled: true
+    material: HONEYCOMB
+    chance: 1.5
+    min-level: 4
+    min-amount: 1
+    max-amount: 1
+  resin_drop:
+    enabled: true
+    material: RESIN_CLUMP
+    chance: 2.0
+    min-level: 4
+    min-amount: 1
+    max-amount: 2
+  golden_apple:
+    enabled: true
+    material: GOLDEN_APPLE
+    chance: 0.45
+    min-level: 1
+    min-amount: 1
+    max-amount: 1
+  enchanted_golden_apple:
+    enabled: true
+    material: ENCHANTED_GOLDEN_APPLE
+    chance: 0.025
+    min-level: 5
+    min-amount: 1
+    max-amount: 1
+config-version: 2

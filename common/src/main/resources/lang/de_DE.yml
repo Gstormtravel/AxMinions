@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Plugin erfolgreich in <white><time></white>ms neu geladen!"
+
+place:
+  success: "<green>Neuer <type> Minion erfolgreich platziert! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Minion konnte nicht platziert werden! Limit erreicht! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Minion konnte nicht platziert werden! Dort steht bereits ein Minion!"
+  missing-permission: "<red>Du hast keine Berechtigung, diesen Minion zu platzieren!"
+  island-limit-reached: "<red>Insel-Minion-Limit erreicht! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Minion erfolgreich aufgesammelt! <gray>(<placed>/<max>)"
+  with-tool: "<green>Minion mit gespeichertem Werkzeug im Inneren aufgesammelt!"
+  without-tool: "<green>Minion aufgesammelt! Das Werkzeug wurde separat zurückgegeben."
+
+errors:
+  inventory-full: "<red>Nicht genug Platz im Inventar! Schaffe zuerst Platz!"
+  give-max-level: "<red>Das Maximallevel ist <max_level>! Du hast versucht, Level <level> zu setzen."
+
+convert:
+  start: "<green>Datenkonvertierung gestartet..."
+  finish: "<green>Datenkonvertierung erfolgreich abgeschlossen!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>Du musst den Minion mit einer Truhe verbinden </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>Der Minion benötigt ein Werkzeug </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>Der Minion benötigt Wasser in der Nähe </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>Der Behälter dieses Minions ist voll </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>Der Minion hat keine Energie mehr! Lade ihn auf!</#FFAAAA>⚠"
+
+time:
+  day: "T"
+  hour: "Std"
+  minute: "Min"
+  second: "Sek"
+
+statistics: "<white>Aktive Minions: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Inaktive Minions: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Gesamt: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Minion erfolgreich auf Level <white><level></white> verbessert!"
+  limit-reached: "<red>Dieser Minion hat bereits das Maximallevel erreicht!"
+  fail: "<red>Nicht genug Aktionen oder Geld für diese Verbesserung!"
+
+link:
+  success: "<green>Minion erfolgreich mit einem Behälter verbunden!"
+  unlink: "<green>Verbindung zum Behälter getrennt."
+  fail: "<red>Kann nicht mit diesem Block verbinden! Zu weit weg oder kein Behälter!"
+  start: "<green>Verbindung gestartet! Klicke auf einen Behälter!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Dein Minion-Menümodus wurde auf <aqua><mode></aqua> geändert!"
+  mode-bedrock: "<yellow>Du spielst über Bedrock/Geyser — das klassische GUI-Menü wird automatisch verwendet."
+  mode-old-client: "<yellow>Dein Client oder Server nutzt derzeit nur das klassische Menü (GUI)."
+
+skills:
+  upgraded: "<green>Du hast <skill> <green>auf Stufe <white><tier>/<max_tier></white> verbessert!"
+  no-points: "<red>Nicht genug Punkte! Benötigt <white><cost></white>, verfügbar <white><available></white>."
+  max-tier: "<yellow>Diese Fähigkeit ist bereits auf der Maximalstufe!"
+  locked-level: "<red>Dein Minion benötigt Level <white><level></white>, um dies freizuschalten!"
+  respec-success: "<green>Reset abgeschlossen! <white><points></white> Punkt(e) zurückerstattet."
+  respec-fail-money: "<red>Nicht genug Geld für den Reset! Gebühr: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>Dieser Minion hat noch keine verteilten Punkte!"
+
+directions:
+  north: "Norden"
+  east: "Osten"
+  south: "Süden"
+  west: "Westen"
+
+charge:
+  charge: "<green>Du hast <white>30 Minuten</white> Energie hinzugefügt!"
+  not-enough-money: "<red>Nicht genug Geld, um diesen Minion aufzuladen!"
+  not-enough-time-passed: "<red>Dein Minion ist fast voll geladen! Warte kurz!"
+
+tools:
+  wrong-tool: "<red>Dieses Item kann nicht als Werkzeug genutzt werden!"
+  stored-lore: "<gray>Gespeichertes Werkzeug: <white><tool>"
+
+tool-names:
+  "none": "Keine"
+  "wooden sword": "Holzschwert"
+  "wooden pickaxe": "Holzspitzhacke"
+  "wooden axe": "Holzaxt"
+  "wooden hoe": "Holzhacke"
+  "wooden shovel": "Holzschaufel"
+  "copper sword": "Kupferschwert"
+  "copper pickaxe": "Kupferspitzhacke"
+  "copper axe": "Kupferaxt"
+  "copper hoe": "Kupferhacke"
+  "copper shovel": "Kupferschaufel"
+  "stone sword": "Steinschwert"
+  "stone pickaxe": "Steinspitzhacke"
+  "stone axe": "Steinaxt"
+  "stone hoe": "Steinhacke"
+  "stone shovel": "Steinschaufel"
+  "iron sword": "Eisenschwert"
+  "iron pickaxe": "Eisenspitzhacke"
+  "iron axe": "Eisenaxt"
+  "iron hoe": "Eisenhacke"
+  "iron shovel": "Eisenschaufel"
+  "golden sword": "Goldschwert"
+  "golden pickaxe": "Goldspitzhacke"
+  "golden axe": "Goldaxt"
+  "golden hoe": "Goldhacke"
+  "golden shovel": "Goldschaufel"
+  "diamond sword": "Diamantschwert"
+  "diamond pickaxe": "Diamantspitzhacke"
+  "diamond axe": "Diamantaxt"
+  "diamond hoe": "Diamanthacke"
+  "diamond shovel": "Diamantschaufel"
+  "netherite sword": "Netheritschwert"
+  "netherite pickaxe": "Netheritspitzhacke"
+  "netherite axe": "Netheritaxt"
+  "netherite hoe": "Netherithacke"
+  "netherite shovel": "Netheritschaufel"
+  "fishing rod": "Angel"
+  "shears": "Schere"
+  "ender eye": "Enderauge"
+  "blaze rod": "Lohenrute"
+  "bow": "Bogen"
+  "crossbow": "Armbrust"
+  "trident": "Dreizack"
+  "mace": "Streitkolben"
+  "stick": "Stock"
+
+reset: "<green>Minion-Anzahl von <player> wurde zurückgesetzt!"
+not-on-island: "<#FF0000>Du befindest dich derzeit auf keiner Insel!"
+slot-give: "<green><player> wurden <amount> Insel-Minion-Plätze gegeben!"
+slot-receive: "<green>Du hast <amount> neue Insel-Minion-Plätze erhalten! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

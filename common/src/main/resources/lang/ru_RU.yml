@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Плагин успешно перезагружен за <white><time></white> мс!"
+
+place:
+  success: "<green>Новый миньон <type> успешно установлен! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Не удалось поставить миньона! Вы достигли лимита! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Не удалось поставить миньона! Здесь уже стоит миньон!"
+  missing-permission: "<red>У вас нет прав для установки этого миньона!"
+  island-limit-reached: "<red>Достигнут лимит миньонов на острове! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Миньон успешно подобран! <gray>(<placed>/<max>)"
+  with-tool: "<green>Миньон подобран с сохранённым внутри инструментом!"
+  without-tool: "<green>Миньон подобран! Инструмент возвращён отдельно в инвентарь."
+
+errors:
+  inventory-full: "<red>В инвентаре недостаточно места! Освободите место!"
+  give-max-level: "<red>Максимальный уровень этого миньона — <max_level>! Вы указали уровень <level>."
+
+convert:
+  start: "<green>Начало конвертации данных..."
+  finish: "<green>Конвертация данных успешно завершена!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>Привяжите миньона к контейнеру </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>Миньону нужен инструмент </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>Миньону нужна вода поблизости </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>Контейнер этого миньона переполнен </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>Заряд миньона иссяк! Пополните его!</#FFAAAA>⚠"
+
+time:
+  day: "д"
+  hour: "ч"
+  minute: "м"
+  second: "с"
+
+statistics: "<white>Работает миньонов: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Простаивает: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Всего: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Миньон улучшен до уровня <white><level></white>!"
+  limit-reached: "<red>Этот миньон уже достиг максимального уровня!"
+  fail: "<red>Недостаточно действий миньона или денег для улучшения!"
+
+link:
+  success: "<green>Миньон успешно привязан к контейнеру!"
+  unlink: "<green>Вы отвязали миньона."
+  fail: "<red>Невозможно привязать к этому блоку! Слишком далеко или не контейнер!"
+  start: "<green>Привязка начата! Нажмите на контейнер!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Режим меню миньонов изменён на <aqua><mode></aqua>!"
+  mode-bedrock: "<yellow>Вы играете с Bedrock/Geyser — классическое GUI-меню выбрано автоматически."
+  mode-old-client: "<yellow>Ваш клиент или сервер сейчас использует только классическое меню (GUI)."
+
+skills:
+  upgraded: "<green>Вы улучшили <skill> <green>до уровня <white><tier>/<max_tier></white>!"
+  no-points: "<red>Недостаточно очков! Требуется <white><cost></white>, доступно <white><available></white>."
+  max-tier: "<yellow>Этот навык уже максимального уровня!"
+  locked-level: "<red>Миньону нужен уровень <white><level></white> для разблокировки!"
+  respec-success: "<green>Сброс выполнен! Возвращено <white><points></white> очк(ов)."
+  respec-fail-money: "<red>Недостаточно денег для сброса! Стоимость: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>У этого миньона ещё нет вложенных очков для сброса!"
+
+directions:
+  north: "Север"
+  east: "Восток"
+  south: "Юг"
+  west: "Запад"
+
+charge:
+  charge: "<green>Вы добавили <white>30 минут</white> заряда миньону!"
+  not-enough-money: "<red>Недостаточно денег для зарядки миньона!"
+  not-enough-time-passed: "<red>Миньон почти полностью заряжен! Подождите немного!"
+
+tools:
+  wrong-tool: "<red>Этот предмет нельзя использовать как инструмент миньона!"
+  stored-lore: "<gray>Сохранённый инструмент: <white><tool>"
+
+tool-names:
+  "none": "Нет"
+  "wooden sword": "Деревянный меч"
+  "wooden pickaxe": "Деревянная кирка"
+  "wooden axe": "Деревянный топор"
+  "wooden hoe": "Деревянная мотыга"
+  "wooden shovel": "Деревянная лопата"
+  "copper sword": "Медный меч"
+  "copper pickaxe": "Медная кирка"
+  "copper axe": "Медный топор"
+  "copper hoe": "Медная мотыга"
+  "copper shovel": "Медная лопата"
+  "stone sword": "Каменный меч"
+  "stone pickaxe": "Каменная кирка"
+  "stone axe": "Каменный топор"
+  "stone hoe": "Каменная мотыга"
+  "stone shovel": "Каменная лопата"
+  "iron sword": "Железный меч"
+  "iron pickaxe": "Железная кирка"
+  "iron axe": "Железный топор"
+  "iron hoe": "Железная мотыга"
+  "iron shovel": "Железная лопата"
+  "golden sword": "Золотой меч"
+  "golden pickaxe": "Золотая кирка"
+  "golden axe": "Золотой топор"
+  "golden hoe": "Золотая мотыга"
+  "golden shovel": "Золотая лопата"
+  "diamond sword": "Алмазный меч"
+  "diamond pickaxe": "Алмазная кирка"
+  "diamond axe": "Алмазный топор"
+  "diamond hoe": "Алмазная мотыга"
+  "diamond shovel": "Алмазная лопата"
+  "netherite sword": "Незеритовый меч"
+  "netherite pickaxe": "Незеритовая кирка"
+  "netherite axe": "Незеритовый топор"
+  "netherite hoe": "Незеритовая мотыга"
+  "netherite shovel": "Незеритовая лопата"
+  "fishing rod": "Удочка"
+  "shears": "Ножницы"
+  "ender eye": "Око Эндера"
+  "blaze rod": "Огненный стержень"
+  "bow": "Лук"
+  "crossbow": "Арбалет"
+  "trident": "Трезубец"
+  "mace": "Булава"
+  "stick": "Палка"
+
+reset: "<green>Вы сбросили счётчик миньонов игрока <player>!"
+not-on-island: "<#FF0000>Сейчас вы не на острове!"
+slot-give: "<green>Вы выдали <amount> слотов миньонов на острове игроку <player>!"
+slot-receive: "<green>Вы получили <amount> новых слотов миньонов на острове! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

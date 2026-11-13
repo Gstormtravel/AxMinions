@@ -1,6 +1,7 @@
 package com.artillexstudios.axminions.api.config
 
 import com.artillexstudios.axapi.config.Config
+import com.artillexstudios.axapi.libs.boostedyaml.block.implementation.Section
 import com.artillexstudios.axapi.libs.boostedyaml.dvs.versioning.BasicVersioning
 import com.artillexstudios.axapi.libs.boostedyaml.settings.dumper.DumperSettings
 import com.artillexstudios.axapi.libs.boostedyaml.settings.general.GeneralSettings
@@ -10,6 +11,7 @@ import com.artillexstudios.axapi.utils.RotationType
 import com.artillexstudios.axapi.utils.StringUtils
 import com.artillexstudios.axminions.api.AxMinionsAPI
 import com.artillexstudios.axminions.api.minions.Direction
+import org.bukkit.Material
 import java.io.File
 import java.io.InputStream
 import java.util.Locale
@@ -18,6 +20,26 @@ class Messages(file: File, stream: InputStream) {
     companion object {
         @JvmStatic
         fun PREFIX() = AxMinionsAPI.INSTANCE.getMessages().get<String>("prefix")
+        @JvmStatic
+        fun MENU_MODE_SET() = AxMinionsAPI.INSTANCE.getMessages().get<String>("menu.mode-set")
+        @JvmStatic
+        fun MENU_MODE_BEDROCK() = AxMinionsAPI.INSTANCE.getMessages().get<String>("menu.mode-bedrock")
+        @JvmStatic
+        fun MENU_MODE_OLD_CLIENT() = AxMinionsAPI.INSTANCE.getMessages().get<String>("menu.mode-old-client")
+        @JvmStatic
+        fun SKILL_UPGRADED() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.upgraded")
+        @JvmStatic
+        fun SKILL_NO_POINTS() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.no-points")
+        @JvmStatic
+        fun SKILL_MAX_TIER() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.max-tier")
+        @JvmStatic
+        fun SKILL_LOCKED_LEVEL() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.locked-level")
+        @JvmStatic
+        fun SKILL_RESPEC_SUCCESS() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.respec-success")
+        @JvmStatic
+        fun SKILL_RESPEC_FAIL_MONEY() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.respec-fail-money")
+        @JvmStatic
+        fun SKILL_NOTHING_TO_RESPEC() = AxMinionsAPI.INSTANCE.getMessages().get<String>("skills.nothing-to-respec")
         @JvmStatic
         fun NO_CONTAINER_WARNING() = AxMinionsAPI.INSTANCE.getMessages().get<String>("warnings.no-container")
         @JvmStatic
@@ -66,7 +88,31 @@ class Messages(file: File, stream: InputStream) {
         @JvmStatic
         fun WRONG_TOOL() = AxMinionsAPI.INSTANCE.getMessages().get<String>("tools.wrong-tool")
         @JvmStatic
+        fun TOOL_STORED_LORE() = AxMinionsAPI.INSTANCE.getMessages().get("tools.stored-lore", "<gray>Ferramenta guardada: <white><tool>")
+        @JvmStatic
+        fun PICKUP_WITH_TOOL() = AxMinionsAPI.INSTANCE.getMessages().get("pickup.with-tool", "<green>Minion recolhido com a ferramenta guardada!")
+        @JvmStatic
+        fun PICKUP_WITHOUT_TOOL() = AxMinionsAPI.INSTANCE.getMessages().get("pickup.without-tool", "<green>Minion recolhido! A ferramenta foi devolvida separadamente.")
+        @JvmStatic
+        fun TOOL_NAME(material: Material?): String {
+            val section = AxMinionsAPI.INSTANCE.getMessages().get<Section?>("tool-names", null)
+            if (material == null || material.isAir) {
+                return section?.getString("none") ?: "Nenhuma"
+            }
+            val underscoreKey = material.name.lowercase(Locale.ENGLISH)
+            val spaceKey = underscoreKey.replace('_', ' ')
+            val translated = section?.getString(spaceKey) ?: section?.getString(underscoreKey)
+            if (!translated.isNullOrBlank()) {
+                return translated
+            }
+            return spaceKey.split(" ").joinToString(" ") { word ->
+                word.replaceFirstChar { ch -> ch.uppercase(Locale.ENGLISH) }
+            }
+        }
+        @JvmStatic
         fun ERROR_INVENTORY_FULL() = AxMinionsAPI.INSTANCE.getMessages().get<String>("errors.inventory-full")
+        @JvmStatic
+        fun GIVE_MAX_LEVEL() = AxMinionsAPI.INSTANCE.getMessages().get<String>("errors.give-max-level")
         @JvmStatic
         fun LINK_SUCCESS() = AxMinionsAPI.INSTANCE.getMessages().get<String>("link.success")
         @JvmStatic

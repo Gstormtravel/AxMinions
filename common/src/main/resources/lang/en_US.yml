@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Plugin successfully reloaded in <white><time></white>ms!"
+
+place:
+  success: "<green>Successfully placed new <type> minion! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Could not place minion! You have reached the limit! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Could not place minion! A minion already exists at that location!"
+  missing-permission: "<red>You do not have permission to place this minion!"
+  island-limit-reached: "<red>You have reached the island minion limit! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Successfully picked up minion! <gray>(<placed>/<max>)"
+  with-tool: "<green>Minion picked up with its tool stored inside!"
+  without-tool: "<green>Minion picked up! Its tool was returned separately to your inventory."
+
+errors:
+  inventory-full: "<red>You don't have enough inventory space to do that! Make some room first!"
+  give-max-level: "<red>The maximum level of this minion is <max_level>! You tried to set level <level>."
+
+convert:
+  start: "<green>Starting data conversion..."
+  finish: "<green>Data conversion finished successfully!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>You should link the minion to a container </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>The minion needs a tool </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>The minion needs water nearby </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>This minion's container is full </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>The minion ran out of charge! Refill it!</#FFAAAA>⚠"
+
+time:
+  day: "d"
+  hour: "h"
+  minute: "m"
+  second: "s"
+
+statistics: "<white>Working minions: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Idle minions: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Total: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Successfully upgraded minion to level <white><level></white>!"
+  limit-reached: "<red>This minion has already reached the maximum level!"
+  fail: "<red>Your minion lacks enough actions or you don't have enough money for this upgrade!"
+
+link:
+  success: "<green>Minion successfully linked to a container!"
+  unlink: "<green>You have unlinked the minion."
+  fail: "<red>Cannot link to that block! It is either too far away or not a container!"
+  start: "<green>Linking started! Click a container!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Your minion menu mode has been set to <aqua><mode></aqua>!"
+  mode-bedrock: "<yellow>You are playing via Bedrock/Geyser — classic GUI menu is automatically kept for compatibility."
+  mode-old-client: "<yellow>Your client or server currently uses only the Classic Menu (GUI)."
+
+skills:
+  upgraded: "<green>You upgraded <skill> <green>to tier <white><tier>/<max_tier></white>!"
+  no-points: "<red>Insufficient points! Required <white><cost></white>, available <white><available></white>."
+  max-tier: "<yellow>This skill is already at maximum tier!"
+  locked-level: "<red>Your minion needs level <white><level></white> to unlock this power!"
+  respec-success: "<green>Reset complete! <white><points></white> point(s) refunded for redistribution."
+  respec-fail-money: "<red>Not enough money to reset points! Fee: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>This minion does not have any invested points to reset yet!"
+
+directions:
+  north: "North"
+  east: "East"
+  south: "South"
+  west: "West"
+
+charge:
+  charge: "<green>You added <white>30 minutes</white> of charge to your minion!"
+  not-enough-money: "<red>You don't have enough money to charge this minion!"
+  not-enough-time-passed: "<red>Your minion is almost fully charged! Wait a bit before charging it again!"
+
+tools:
+  wrong-tool: "<red>You cannot put this item as a tool for this minion!"
+  stored-lore: "<gray>Stored tool: <white><tool>"
+
+tool-names:
+  "none": "None"
+  "wooden sword": "Wooden Sword"
+  "wooden pickaxe": "Wooden Pickaxe"
+  "wooden axe": "Wooden Axe"
+  "wooden hoe": "Wooden Hoe"
+  "wooden shovel": "Wooden Shovel"
+  "copper sword": "Copper Sword"
+  "copper pickaxe": "Copper Pickaxe"
+  "copper axe": "Copper Axe"
+  "copper hoe": "Copper Hoe"
+  "copper shovel": "Copper Shovel"
+  "stone sword": "Stone Sword"
+  "stone pickaxe": "Stone Pickaxe"
+  "stone axe": "Stone Axe"
+  "stone hoe": "Stone Hoe"
+  "stone shovel": "Stone Shovel"
+  "iron sword": "Iron Sword"
+  "iron pickaxe": "Iron Pickaxe"
+  "iron axe": "Iron Axe"
+  "iron hoe": "Iron Hoe"
+  "iron shovel": "Iron Shovel"
+  "golden sword": "Golden Sword"
+  "golden pickaxe": "Golden Pickaxe"
+  "golden axe": "Golden Axe"
+  "golden hoe": "Golden Hoe"
+  "golden shovel": "Golden Shovel"
+  "diamond sword": "Diamond Sword"
+  "diamond pickaxe": "Diamond Pickaxe"
+  "diamond axe": "Diamond Axe"
+  "diamond hoe": "Diamond Hoe"
+  "diamond shovel": "Diamond Shovel"
+  "netherite sword": "Netherite Sword"
+  "netherite pickaxe": "Netherite Pickaxe"
+  "netherite axe": "Netherite Axe"
+  "netherite hoe": "Netherite Hoe"
+  "netherite shovel": "Netherite Shovel"
+  "fishing rod": "Fishing Rod"
+  "shears": "Shears"
+  "ender eye": "Ender Eye"
+  "blaze rod": "Blaze Rod"
+  "bow": "Bow"
+  "crossbow": "Crossbow"
+  "trident": "Trident"
+  "mace": "Mace"
+  "stick": "Stick"
+
+reset: "<green>You have reset <player>'s minion count!"
+not-on-island: "<#FF0000>You are currently not on an island!"
+slot-give: "<green>You gave <amount> island minion slots to <player>!"
+slot-receive: "<green>You were given <amount> new island minion slots! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

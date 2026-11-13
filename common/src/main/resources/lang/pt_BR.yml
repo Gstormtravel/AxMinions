@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Plugin recarregado com sucesso em <white><time></white>ms!"
+
+place:
+  success: "<green>Novo minion <type> colocado com sucesso! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Não foi possível colocar o minion! Você atingiu o limite! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Não foi possível colocar o minion! Já existe um minion nesse local!"
+  missing-permission: "<red>Você não tem as permissões necessárias para colocar este minion!"
+  island-limit-reached: "<red>Você atingiu o limite de minions da ilha! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Minion recolhido com sucesso! <gray>(<placed>/<max>)"
+  with-tool: "<green>Minion recolhido com a ferramenta guardada dentro dele!"
+  without-tool: "<green>Minion recolhido! A ferramenta foi devolvida separadamente ao inventário."
+
+errors:
+  inventory-full: "<red>Você não tem espaço suficiente no inventário para fazer isso! Vá e abra algum espaço!"
+  give-max-level: "<red>O nível máximo deste minion é <max_level>! Você tentou colocar o nível <level>."
+
+convert:
+  start: "<green>Iniciando conversão de dados..."
+  finish: "<green>Conversão de dados concluída com sucesso!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>Você deve vincular o minion a um recipiente </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>O minion precisa de uma ferramenta </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>O minion precisa de água por perto </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>O recipiente deste minion está cheio </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>O minion ficou sem carga! Reabasteça-o!</#FFAAAA>⚠"
+
+time:
+  day: "d"
+  hour: "h"
+  minute: "m"
+  second: "s"
+
+statistics: "<white>Minions funcionando: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Minions parados: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Total: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Minion melhorado com sucesso para o nível: <white><level></white>!"
+  limit-reached: "<red>Você já atingiu o nível máximo deste minion!"
+  fail: "<red>O seu minion não tem ações suficientes ou você não tem dinheiro suficiente para comprar esta melhoria!"
+
+link:
+  success: "<green>Minion vinculado com sucesso a um recipiente!"
+  unlink: "<green>Você desvinculou o minion."
+  fail: "<red>Não é possível vincular a esse bloco! Ou está muito longe, ou não é um recipiente!"
+  start: "<green>Vinculação iniciada! Clique em um recipiente!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Seu modo de menu dos minions foi alterado para <aqua><mode></aqua>!"
+  mode-bedrock: "<yellow>Você está jogando via Bedrock/Geyser — o menu GUI clássico é mantido automaticamente para sua compatibilidade."
+  mode-old-client: "<yellow>Seu cliente ou servidor está usando apenas o Menu Clássico (GUI) no momento."
+
+skills:
+  upgraded: "<green>Você evoluiu <skill> <green>para o tier <white><tier>/<max_tier></white>!"
+  no-points: "<red>Pontos insuficientes! Necessário <white><cost></white>, disponível <white><available></white>."
+  max-tier: "<yellow>Esta habilidade já está no tier máximo!"
+  locked-level: "<red>Seu minion precisa estar no nível <white><level></white> para desbloquear este poder!"
+  respec-success: "<green>Reset concluído! <white><points></white> ponto(s) devolvido(s) para redistribuição."
+  respec-fail-money: "<red>Dinheiro insuficiente para resetar pontos! Taxa: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>Este minion ainda não possui pontos investidos para resetar!"
+
+directions:
+  north: "Norte"
+  east: "Leste"
+  south: "Sul"
+  west: "Oeste"
+
+charge:
+  charge: "<green>Você adicionou <white>30 minutos</white> de carga ao seu minion!"
+  not-enough-money: "<red>Você não tem dinheiro suficiente para carregar este minion!"
+  not-enough-time-passed: "<red>O seu minion está quase totalmente carregado! Espere um pouco antes de carregá-lo novamente!"
+
+tools:
+  wrong-tool: "<red>Você não pode colocar este item como ferramenta deste minion!"
+  stored-lore: "<gray>Ferramenta guardada: <white><tool>"
+
+tool-names:
+  "none": "Nenhuma"
+  "wooden sword": "Espada de Madeira"
+  "wooden pickaxe": "Picareta de Madeira"
+  "wooden axe": "Machado de Madeira"
+  "wooden hoe": "Enxada de Madeira"
+  "wooden shovel": "Pá de Madeira"
+  "copper sword": "Espada de Cobre"
+  "copper pickaxe": "Picareta de Cobre"
+  "copper axe": "Machado de Cobre"
+  "copper hoe": "Enxada de Cobre"
+  "copper shovel": "Pá de Cobre"
+  "stone sword": "Espada de Pedra"
+  "stone pickaxe": "Picareta de Pedra"
+  "stone axe": "Machado de Pedra"
+  "stone hoe": "Enxada de Pedra"
+  "stone shovel": "Pá de Pedra"
+  "iron sword": "Espada de Ferro"
+  "iron pickaxe": "Picareta de Ferro"
+  "iron axe": "Machado de Ferro"
+  "iron hoe": "Enxada de Ferro"
+  "iron shovel": "Pá de Ferro"
+  "golden sword": "Espada de Ouro"
+  "golden pickaxe": "Picareta de Ouro"
+  "golden axe": "Machado de Ouro"
+  "golden hoe": "Enxada de Ouro"
+  "golden shovel": "Pá de Ouro"
+  "diamond sword": "Espada de Diamante"
+  "diamond pickaxe": "Picareta de Diamante"
+  "diamond axe": "Machado de Diamante"
+  "diamond hoe": "Enxada de Diamante"
+  "diamond shovel": "Pá de Diamante"
+  "netherite sword": "Espada de Netherita"
+  "netherite pickaxe": "Picareta de Netherita"
+  "netherite axe": "Machado de Netherita"
+  "netherite hoe": "Enxada de Netherita"
+  "netherite shovel": "Pá de Netherita"
+  "fishing rod": "Vara de Pesca"
+  "shears": "Tesoura"
+  "ender eye": "Olho de Ender"
+  "blaze rod": "Vara de Blaze"
+  "bow": "Arco"
+  "crossbow": "Besta"
+  "trident": "Tridente"
+  "mace": "Clava"
+  "stick": "Graveto"
+
+reset: "<green>Você redefiniu a contagem de minions de <player>!"
+not-on-island: "<#FF0000>No momento, você não está em uma ilha!"
+slot-give: "<green>Você deu <amount> espaços de minion na ilha para <player>!"
+slot-receive: "<green>Foram dados a você <amount> novos espaços de minion na ilha! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

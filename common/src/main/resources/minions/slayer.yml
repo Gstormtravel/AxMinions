@@ -1,144 +1,429 @@
-name: "<#FF3333>Slayer <white>Minion"
+name: "<#FF3333>Minion <white>Caçador"
 
 entity:
-  name: "<level_color>[<level>] <#FF3333>Slayer <white>Minion <gray>[<owner>]"
+  name: "<level_color>[<level>] <#FF3333>Minion <white>Caçador <gray>[<owner>]"
 
 tool:
   material:
     - "WOODEN_SWORD"
     - "STONE_SWORD"
     - "GOLDEN_SWORD"
+    - "COPPER_SWORD"
     - "IRON_SWORD"
     - "DIAMOND_SWORD"
     - "NETHERITE_SWORD"
 
-damage-animals: false
+damage-animals: true
 damage-tamed: false
 damage-renamed: false
 
 item:
   type: "player_head"
   texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc1MzJlOTBjNTczYTM5NGM3ODAyYWE0MTU4MzA1ODAyYjU5ZTY3ZjJhMmI3ZTNmZDAzNjNhYTZlYTQyYjg0MSJ9fX0="
-  name: "<#FF3333>Slayer <white>Minion"
+  name: "<#FF3333>Minion <white>Caçador"
   lore:
     - ""
-    - " <gray>- <white>Kills mobs around itself."
+    - " <gray>- <white> Mata monstros ao redor de si."
     - ""
-    - "<#FF3333>Statistics"
-    - " <#FF3333>❙ <white>Level: <#FFEEAA><level>"
-    - " <#FF3333>❙ <white>Mobs killed: <#FFEEAA><actions>"
+    - "<#FF3333>Estatísticas"
+    - " <#FF3333>❙ <white>Nível: <#FFEEAA><level>"
+    - " <#FF3333>❙ <white>Mobs mortos: <#FFEEAA><actions>"
     - ""
-    - "<#FF3333><b>(!)</b> Place the minion and give it a sword!"
+    - "<#FF3333><b>(!)</b> Posicione o minion e dê uma espada a ele!"
 
 gui:
   upgrade:
     type: "gold_ingot"
-    name: "<#00CCFF><b>Upgrade minion"
+    name: "<#00CCFF><b>Melhorar minion"
     lore:
       - ""
-      - " <gray>- <white>Level: <green><level> » <dark_green><next_level>"
-      - " <gray>- <white>Range: <green><range> » <dark_green><next_range>"
-      - " <gray>- <white>Speed: <green><speed> » <dark_green><next_speed>"
+      - " <gray>- <white>Nível: <green><level> » <dark_green><next_level>"
+      - " <gray>- <white>Alcance: <green><range> » <dark_green><next_range>"
+      - " <gray>- <white>Velocidade: <green><speed> » <dark_green><next_speed>"
       - ""
-      - "<#00CCFF>Requirements:"
-      - " <gray>- <white>Money: <#33FF33><price>$"
-      - " <gray>- <white>Mobs killed: <#33FF33><required_actions>"
+      - "<#00CCFF>Requisitos:"
+      - " <gray>- <white>Dinheiro: <#33FF33><price>$"
+      - " <gray>- <white>Mobs mortos: <#33FF33><required_actions>"
       - ""
-      - "<#00CCFF><b>(!)</b> Click here to upgrade your minion!"
+      - "<#00CCFF><b>(!)</b> Clique aqui para melhorar o seu minion!"
   statistics:
     type: "paper"
-    name: "<#FF3333><b>Statistics"
+    name: "<#FF3333><b>Estatísticas"
     lore:
       - ""
-      - " <gray>- <white>Mobs killed: <#FF3333><actions>"
-      - " <gray>- <white>Stored exp: <#CC00FF><storage>"
+      - " <gray>- <white>Mobs mortos: <#FF3333><actions>"
+      - " <gray>- <white>XP guardada: <#CC00FF><storage>"
       - ""
 
 upgrades:
-  1:
-    range: 3
-    speed: 200
-    storage: 200
+  '1':
+    range: 1.5
+    speed: 220
+    storage: 800
     items:
       helmet:
-        type: "player_head"
+        type: player_head
         texture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc1MzJlOTBjNTczYTM5NGM3ODAyYWE0MTU4MzA1ODAyYjU5ZTY3ZjJhMmI3ZTNmZDAzNjNhYTZlYTQyYjg0MSJ9fX0="
       chestplate:
-        type: "leather_chestplate"
-        color: "255, 0, 0"
+        type: leather_chestplate
+        color: 255, 0, 0
         glow: false
       leggings:
-        type: "leather_leggings"
-        color: "255, 0, 0"
+        type: leather_leggings
+        color: 255, 0, 0
         glow: false
       boots:
-        type: "leather_boots"
-        color: "255, 0, 0"
+        type: leather_boots
+        color: 255, 0, 0
         glow: false
-  2:
-    range: 4
-    speed: 190
+  '2':
+    range: 1.5
+    speed: 215
+    storage: 1200
     requirements:
       money: 1000
       actions: 100
-  3:
-    range: 4
-    speed: 175
+  '3':
+    range: 1.5
+    speed: 210
+    storage: 2200
     requirements:
       money: 3000
       actions: 300
-  4:
-    range: 5
-    speed: 160
+  '4':
+    range: 1.5
+    speed: 210
+    storage: 3600
     requirements:
       money: 10000
       actions: 1000
-  5:
-    range: 5
-    speed: 150
+  '5':
+    range: 1.5
+    speed: 205
+    storage: 5400
     requirements:
       money: 20000
       actions: 3000
-  6:
-    range: 6
-    speed: 130
+  '6':
+    range: 1.5
+    speed: 200
+    storage: 7400
     requirements:
       money: 50000
       actions: 6000
-  7:
-    range: 6
-    speed: 115
+  '7':
+    range: 1.5
+    speed: 195
+    storage: 9600
     requirements:
       money: 150000
       actions: 10000
-  8:
-    range: 7
-    speed: 100
+  '8':
+    range: 1.5
+    speed: 190
+    storage: 12200
     requirements:
       money: 500000
       actions: 17500
-  9:
-    range: 8
-    speed: 85
+  '9':
+    range: 1.5
+    speed: 190
+    storage: 15000
     requirements:
       money: 1000000
       actions: 25000
-  10:
-    range: 8
-    speed: 60
+  '10':
+    range: 1.5
+    speed: 185
+    storage: 18000
     requirements:
-      money: 5000000
+      money: 2500000
       actions: 50000
     items:
       chestplate:
         type: LEATHER_CHESTPLATE
-        color: "200, 0, 0"
+        color: 200, 0, 0
         glow: true
       leggings:
         type: LEATHER_LEGGINGS
-        color: "200, 0, 0"
+        color: 200, 0, 0
         glow: true
       boots:
         type: LEATHER_BOOTS
-        color: "200, 0, 0"
+        color: 200, 0, 0
         glow: true
+  '11':
+    range: 1.5
+    speed: 180
+    storage: 21400
+    requirements:
+      money: 4000000
+      actions: 65000
+  '12':
+    range: 2.0
+    speed: 175
+    storage: 24800
+    requirements:
+      money: 6000000
+      actions: 85000
+  '13':
+    range: 2.0
+    speed: 175
+    storage: 28600
+    requirements:
+      money: 9000000
+      actions: 110000
+  '14':
+    range: 2.0
+    speed: 170
+    storage: 32400
+    requirements:
+      money: 12500000
+      actions: 140000
+  '15':
+    range: 2.0
+    speed: 165
+    storage: 36600
+    requirements:
+      money: 17500000
+      actions: 175000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 220, 40, 120
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 220, 40, 120
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 220, 40, 120
+        glow: true
+  '16':
+    range: 2.0
+    speed: 160
+    storage: 40800
+    requirements:
+      money: 23000000
+      actions: 215000
+  '17':
+    range: 2.0
+    speed: 155
+    storage: 45400
+    requirements:
+      money: 30000000
+      actions: 260000
+  '18':
+    range: 2.0
+    speed: 155
+    storage: 50000
+    requirements:
+      money: 40000000
+      actions: 310000
+  '19':
+    range: 2.0
+    speed: 150
+    storage: 55000
+    requirements:
+      money: 55000000
+      actions: 365000
+  '20':
+    range: 2.0
+    speed: 145
+    storage: 60000
+    requirements:
+      money: 75000000
+      actions: 425000
+    items:
+      chestplate:
+        type: LEATHER_CHESTPLATE
+        color: 255, 60, 220
+        glow: true
+      leggings:
+        type: LEATHER_LEGGINGS
+        color: 255, 60, 220
+        glow: true
+      boots:
+        type: LEATHER_BOOTS
+        color: 255, 60, 220
+        glow: true
+
+skill-system:
+  enabled: true
+  points-per-level: 1
+  bonus-points-levels: [5, 10, 15, 20]
+  respec-cost-money: 1000000
+  stats:
+    speed:
+      display-name: '<#FF5555>Cadência de Golpes'
+      description:
+      - '<gray>Reduz o intervalo entre ataques (-15 ticks/tier).'
+      material: REDSTONE
+      slot: 10
+      max-tier: 6
+      cost-per-tier: [1, 1, 1, 1, 1, 1]
+      modifier-per-tier: -15
+      min-speed-floor: 55
+    range:
+      display-name: '<#FFAA00>Alcance da Lâmina'
+      description:
+      - '<gray>Aumenta o alcance para localizar mobs (+0.75/tier).'
+      material: DIAMOND_SWORD
+      slot: 11
+      max-tier: 4
+      cost-per-tier: [2, 2, 3, 3]
+      modifier-per-tier: 0.75
+      max-range-cap: 5.0
+    durability_save:
+      display-name: '<#55FF55>Lâmina Inquebrável'
+      description:
+      - '<gray>Chance de preservar a espada (+12.5%/tier).'
+      material: ANVIL
+      slot: 12
+      max-tier: 4
+      cost-per-tier: [1, 1, 1, 1]
+      chance-per-tier: 12.5
+    storage:
+      display-name: '<#FFFF55>Reserva de XP'
+      description:
+      - '<gray>Aumenta a capacidade de XP armazenado (+25%/tier).'
+      material: EXPERIENCE_BOTTLE
+      slot: 13
+      max-tier: 5
+      cost-per-tier: [1, 1, 1, 1, 1]
+      modifier-per-tier: 0.25
+
+custom-abilities:
+  coleta_direta:
+    enabled: true
+    slot: 19
+    material: ENDER_CHEST
+    display-name: '<#AA55FF>Coleta Direta'
+    description:
+    - '<gray>Envia o loot do mob abatido diretamente para'
+    - '<gray>o baú vinculado sem sequer cair no chão.'
+    min-level: 10
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 50
+    chance-per-tier: 50
+    effects:
+    - type: DIRECT_TO_CHEST
+  golpe_wildstacker:
+    enabled: true
+    slot: 21
+    material: NETHERITE_SWORD
+    display-name: '<#FF3355>Golpe WildStacker'
+    description:
+    - '<gray>Chance de eliminar mobs adicionais por golpe'
+    - '<gray>em stacks de entidades do WildStacker.'
+    min-level: 16
+    max-tier: 3
+    cost-per-tier: [3, 3, 4]
+    trigger: ON_ACTION
+    chance: 35
+    chance-per-tier: 25
+    effects:
+    - type: MULTI_KILL_STACK
+      amount: 1
+  looting_edge:
+    enabled: true
+    slot: 23
+    material: ENCHANTED_BOOK
+    display-name: '<#FFAA00>Corte Saqueador'
+    description:
+    - '<gray>Adiciona rolagens extras equivalentes a Saque'
+    - '<gray>nos drops de todos os mobs abatidos.'
+    min-level: 11
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 20
+    chance-per-tier: 20
+    effects:
+    - type: BONUS_LOOTING_ROLL
+  soul_drain:
+    enabled: true
+    slot: 25
+    material: SOUL_LANTERN
+    display-name: '<#55FFFF>Sifão de Almas'
+    description:
+    - '<gray>Amplifica em +28%/tier o XP capturado por'
+    - '<gray>abate de mobs e stacks.'
+    min-level: 13
+    max-tier: 3
+    cost-per-tier: [2, 2, 3]
+    trigger: ON_ACTION
+    chance: 100
+    effects:
+    - type: XP_BOOST
+      factor: 1.28
+  head_hunter:
+    enabled: true
+    slot: 28
+    material: SKELETON_SKULL
+    display-name: '<#FFDD55>Colecionador de Troféus'
+    description:
+    - '<gray>Chance de dropar cabeças decorativas ao'
+    - '<gray>abater esqueletos, zumbis, creepers ou wither.'
+    min-level: 15
+    max-tier: 2
+    cost-per-tier: [3, 3]
+    trigger: ON_ACTION
+    chance: 1.0
+    chance-per-tier: 1.5
+    effects:
+    - type: MOB_HEAD_DROP
+  shockwave_cleave:
+    enabled: true
+    slot: 30
+    material: IRON_AXE
+    display-name: '<#FF5555>Onda de Impacto'
+    description:
+    - '<gray>Golpe em área que atinge múltiplos alvos'
+    - '<gray>adicionais ao redor do minion no mesmo ciclo.'
+    min-level: 17
+    max-tier: 3
+    cost-per-tier: [2, 3, 3]
+    trigger: ON_ACTION
+    chance: 35
+    chance-per-tier: 25
+    effects:
+    - type: AOE_CLEAVE
+      count: 2
+  rare_essence:
+    enabled: true
+    slot: 32
+    material: GHAST_TEAR
+    display-name: '<#DD55FF>Extração de Essência'
+    description:
+    - '<gray>Chance de extrair lágrimas de ghast, varas de'
+    - '<gray>blaze ou membranas extras de mobs hostis.'
+    min-level: 19
+    max-tier: 3
+    cost-per-tier: [3, 3, 4]
+    trigger: ON_ACTION
+    chance: 2.0
+    chance-per-tier: 2.5
+    effects:
+    - type: MOB_RARE_LOOT
+  executioner_frenzy:
+    enabled: true
+    slot: 34
+    material: NETHER_STAR
+    display-name: '<#FF2244>Frenesi do Executor'
+    description:
+    - '<gray>Chance de executar imediatamente um segundo'
+    - '<gray>golpe fulminante sobre o alvo no mesmo tick.'
+    min-level: 20
+    max-tier: 2
+    cost-per-tier: [4, 4]
+    trigger: ON_ACTION
+    chance: 15
+    chance-per-tier: 15
+    cooldown-seconds: 12
+    effects:
+    - type: EXECUTIONER_FRENZY
+config-version: 2

@@ -28,8 +28,10 @@ class H2DataHandler : DataHandler {
 
     override fun setup() {
         val config = HikariConfig()
-        config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource")
-        config.addDataSourceProperty("url", "jdbc:h2:async:./${AxMinionsPlugin.INSTANCE.dataFolder}/data")
+        // config.setDataSourceClassName("org.h2.jdbcx.JdbcDataSource")
+        // config.addDataSourceProperty("url", "jdbc:h2:async:./${AxMinionsPlugin.INSTANCE.dataFolder}/data")
+        config.jdbcUrl = "jdbc:h2:./${AxMinionsPlugin.INSTANCE.dataFolder}/data;WRITE_DELAY=0;FILE_LOCK=FS;DB_CLOSE_ON_EXIT=FALSE"
+        config.driverClassName = "org.h2.Driver"
         config.setAutoCommit(true)
         dataSource = HikariDataSource(config) 
 
@@ -81,6 +83,30 @@ class H2DataHandler : DataHandler {
             }
         }
 
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("ALTER TABLE `axminions_minions` ADD COLUMN IF NOT EXISTS `skills_data` CLOB DEFAULT('');").use {
+                it.executeUpdate()
+            }
+        }
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("ALTER TABLE `axminions_minions` ADD COLUMN IF NOT EXISTS `first_owner` VARCHAR(64) DEFAULT('');").use {
+                it.executeUpdate()
+            }
+        }
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("ALTER TABLE `axminions_minions` ADD COLUMN IF NOT EXISTS `owner_history` CLOB DEFAULT('');").use {
+                it.executeUpdate()
+            }
+        }
+
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("ALTER TABLE `axminions_users` ADD COLUMN IF NOT EXISTS `menu_mode` VARCHAR(16);").use {
+                it.executeUpdate()
+            }
+        }
+
         if (Config.ISLAND_LIMIT() > 0) {
             dataSource.connection.use { connection ->
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `axminions_island_counter`(`island` VARCHAR(256) PRIMARY KEY, `placed` INT);")
@@ -128,6 +154,11 @@ class H2DataHandler : DataHandler {
                         val actions = resultSet.getLong("actions")
                         val tool = resultSet.getString("tool")
                         val charge = resultSet.getLong("charge")
+                        val skillsData = try { resultSet.getString("skills_data") ?: "" } catch (_: Exception) { "" }
+                        val offlineOwner = Bukkit.getOfflinePlayer(ownerId)
+                        val fallbackOwnerName = offlineOwner.name ?: ownerId.toString()
+                        val firstOwner = try { resultSet.getString("first_owner")?.ifBlank { fallbackOwnerName } ?: fallbackOwnerName } catch (_: Exception) { fallbackOwnerName }
+                        val ownerHistory = try { resultSet.getString("owner_history")?.ifBlank { firstOwner } ?: firstOwner } catch (_: Exception) { firstOwner }
 
                         val location = getLocation(locationId)
                         var chestLocation: Location? = null
@@ -143,7 +174,7 @@ class H2DataHandler : DataHandler {
                         com.artillexstudios.axminions.minions.Minion(
                             location!!,
                             ownerId,
-                            Bukkit.getOfflinePlayer(ownerId),
+                            offlineOwner,
                             minionType,
                             level.toInt(),
                             itemStack,
@@ -153,7 +184,10 @@ class H2DataHandler : DataHandler {
                             storage,
                             locationId,
                             chestLocationId,
-                            charge
+                            charge,
+                            skillsData,
+                            firstOwner,
+                            ownerHistory
                         )
                     }
                 }
@@ -258,15 +292,21 @@ class H2DataHandler : DataHandler {
         }
 
         val extra = getExtraSlots(minion.getOwnerUUID())
+        val existingMenuMode = getUserMenuMode(minion.getOwnerUUID())
 
-        dataSource.connection.use { connection ->       
+        dataSource.connection.use { connection ->
             connection.prepareStatement(
-                "MERGE INTO `axminions_users`(`uuid`, `name`, `island_slots`) KEY(`uuid`) VALUES (?,?,?);",
+                "MERGE INTO `axminions_users`(`uuid`, `name`, `island_slots`, `menu_mode`) KEY(`uuid`) VALUES (?,?,?,?);",
                 Statement.RETURN_GENERATED_KEYS
             ).use { statement ->
                 statement.setObject(1, minion.getOwnerUUID())
                 statement.setString(2, minion.getOwner()?.name ?: "---")
                 statement.setInt(3, extra)
+                if (existingMenuMode == null) {
+                    statement.setNull(4, Types.VARCHAR)
+                } else {
+                    statement.setString(4, existingMenuMode)
+                }
                 statement.executeUpdate()
 
                 statement.generatedKeys.use { resultSet ->
@@ -282,7 +322,7 @@ class H2DataHandler : DataHandler {
         }
 
         dataSource.connection.use { connection ->
-            connection.prepareStatement("MERGE INTO `axminions_minions`(`location_id`, `chest_location_id`, `owner_id`, `type_id`, `direction`, `level`, `storage`, `actions`, `tool`, `charge`) KEY(`location_id`) VALUES(?,?,?,?,?,?,?,?,?,?)")
+            connection.prepareStatement("MERGE INTO `axminions_minions`(`location_id`, `chest_location_id`, `owner_id`, `type_id`, `direction`, `level`, `storage`, `actions`, `tool`, `charge`, `skills_data`, `first_owner`, `owner_history`) KEY(`location_id`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)")
                 .use { statement ->
                     statement.setInt(1, locationId)
                     if (linkedChestId == null) {
@@ -302,6 +342,9 @@ class H2DataHandler : DataHandler {
                         statement.setString(9, Serializers.ITEM_STACK.serialize(minion.getTool()))
                     }
                     statement.setLong(10, minion.getCharge())
+                    statement.setString(11, minion.getSkillsData())
+                    statement.setString(12, minion.getFirstOwner())
+                    statement.setString(13, minion.getOwnershipHistoryString())
                     statement.executeUpdate()
                 }
         }
@@ -467,7 +510,42 @@ class H2DataHandler : DataHandler {
         }
     }
 
+    override fun getUserMenuMode(user: UUID): String? {
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("SELECT `menu_mode` FROM `axminions_users` WHERE `uuid` = ?;").use { statement ->
+                statement.setObject(1, user)
+                statement.executeQuery().use { resultSet ->
+                    if (resultSet.next()) {
+                        return resultSet.getString("menu_mode")
+                    }
+                    return null
+                }
+            }
+        }
+    }
+
+    override fun setUserMenuMode(user: UUID, name: String, mode: String) {
+        addUser(user, name)
+        dataSource.connection.use { connection ->
+            connection.prepareStatement("UPDATE `axminions_users` SET `menu_mode` = ?, `name` = ? WHERE `uuid` = ?;").use { statement ->
+                statement.setString(1, mode)
+                statement.setString(2, name)
+                statement.setObject(3, user)
+                statement.executeUpdate()
+            }
+        }
+    }
+
     override fun disable() {
-        dataSource.connection.prepareStatement("SHUTDOWN DEFRAG;").executeUpdate()
+        // Verifica se o dataSource foi realmente inicializado antes de tentar desligar
+        if (::dataSource.isInitialized) {
+            try {
+                dataSource.connection.use { connection ->
+                    connection.prepareStatement("SHUTDOWN DEFRAG;").executeUpdate()
+                }
+            } catch (e: Exception) {
+                // Ignora erros na hora de fechar, para não crashar o desligamento do servidor
+            }
+        }
     }
 }

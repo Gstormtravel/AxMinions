@@ -5,6 +5,7 @@ import com.artillexstudios.axminions.api.minions.Minion
 import com.artillexstudios.axminions.api.minions.miniontype.MinionType
 import com.artillexstudios.axminions.api.warnings.Warnings
 import com.artillexstudios.axminions.minions.MinionTicker
+import com.artillexstudios.axminions.skills.AbilityEngine
 import com.artillexstudios.axminions.utils.Enchantments
 import kotlin.math.roundToInt
 import org.bukkit.Material
@@ -20,10 +21,10 @@ class SellerMinionType : MinionType("seller", AxMinionsPlugin.INSTANCE.getResour
 
     override fun onToolDirty(minion: Minion) {
         val minionImpl = minion as com.artillexstudios.axminions.minions.Minion
-        minionImpl.setRange(getDouble("range", minion.getLevel()))
+        minionImpl.setRange(minion.getEffectiveRange())
         val tool = Enchantments.EFFICIENCY?.let { minion.getTool()?.getEnchantmentLevel(it)?.div(10.0) } ?: 0.1
         val efficiency = 1.0 - if (tool > 0.9) 0.9 else tool
-        minionImpl.setNextAction((getLong("speed", minion.getLevel()) * efficiency).roundToInt())
+        minionImpl.setNextAction((minion.getEffectiveSpeed() * efficiency).roundToInt().coerceAtLeast(10))
     }
 
     override fun run(minion: Minion) {
@@ -81,7 +82,8 @@ class SellerMinionType : MinionType("seller", AxMinionsPlugin.INSTANCE.getResour
                 if (blockState is Container) {
                     val stacks = arrayOfNulls<ItemStack>(blockState.inventory.size)
                     for ((counter, stack) in blockState.inventory.contents.withIndex()) {
-                        val success = sellItemStack(minion, stack)
+                        if (stack == null || stack.type == Material.AIR) continue
+                        val success = sellItemStack(minion, stack, fromShulker = true)
                         if (!success) {
                             stacks[counter] = stack
                         }
@@ -92,30 +94,51 @@ class SellerMinionType : MinionType("seller", AxMinionsPlugin.INSTANCE.getResour
             }
             it.itemMeta = itemMeta
 
-            val success = sellItemStack(minion, it)
+            val success = sellItemStack(minion, it, fromShulker = false)
             if (success) {
                 it.amount = 0
             }
         }
+        AbilityEngine.processPeriodicCycle(minion)
     }
 
     // Returns if the item should be removed
-    private fun sellItemStack(minion: Minion, it: ItemStack): Boolean {
-        var price = AxMinionsPlugin.integrations.getPricesIntegration()!!.getPrice(it)
+    private fun sellItemStack(minion: Minion, it: ItemStack, fromShulker: Boolean = false): Boolean {
+        var price = AxMinionsPlugin.integrations.getPricesIntegration()!!.getPrice(it, minion.getOwner())
 
         if (price <= 0) {
             return getConfig().get("delete-unsellable")
         }
 
-        price *= getDouble("multiplier", minion.getLevel())
+        val mult = AbilityEngine.getEffectiveMultiplier(minion, getDouble("multiplier", minion.getLevel()))
+        price *= mult
 
-        if (minion.getStorage() + price > getDouble("storage", minion.getLevel())) {
+        val saleOutcome = AbilityEngine.applySellerSaleAbilities(minion, price, itemCount = it.amount, fromShulker = fromShulker)
+        val finalPrice = saleOutcome.finalMoney
+        val maxStorage = AbilityEngine.getEffectiveStorage(minion, getDouble("storage", minion.getLevel()))
+
+        if (saleOutcome.autoDepositVault) {
+            val eco = AxMinionsPlugin.integrations.getEconomyIntegration()
+            val owner = minion.getOwner()
+            if (eco != null && owner != null) {
+                eco.giveBalance(owner, finalPrice)
+                minion.setActions(minion.getActionAmount() + it.amount)
+                if (!AbilityEngine.shouldSaveDurability(minion)) {
+                    minion.damageTool()
+                }
+                return true
+            }
+        }
+
+        if (minion.getStorage() + finalPrice > maxStorage) {
             return false
         }
 
         minion.setActions(minion.getActionAmount() + it.amount)
-        minion.damageTool()
-        minion.setStorage(minion.getStorage() + price)
+        if (!AbilityEngine.shouldSaveDurability(minion)) {
+            minion.damageTool()
+        }
+        minion.setStorage(minion.getStorage() + finalPrice)
         return true
     }
 }

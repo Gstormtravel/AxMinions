@@ -28,6 +28,11 @@ interface Minion : InventoryHolder {
 
     fun getAsItem(): ItemStack
 
+    fun getAsItem(includeTool: Boolean): ItemStack = getAsItem()
+
+    fun pickupByPlayer(player: Player, keepToolInside: Boolean = false) {
+    }
+
     fun getLevel(): Int
 
     fun setActions(actions: Long)
@@ -117,4 +122,40 @@ interface Minion : InventoryHolder {
     fun getCharge(): Long
 
     fun setCharge(charge: Long)
+
+    fun getSkillsData(): String
+
+    fun getSkillAllocations(): Map<String, Int>
+
+    fun getStatTier(statId: String): Int
+
+    fun getAbilityTier(abilityId: String): Int
+
+    fun getTotalSkillPoints(): Int
+
+    fun getSpentSkillPoints(): Int
+
+    fun getAvailableSkillPoints(): Int
+
+    fun upgradeSkill(skillId: String, player: org.bukkit.entity.Player): Boolean
+
+    fun respecSkills(player: org.bukkit.entity.Player): Boolean
+
+    fun getEffectiveRange(): Double
+
+    fun getEffectiveSpeed(): Int
+
+    fun openChestInventory(player: org.bukkit.entity.Player)
+
+    fun openSkillsInventory(player: org.bukkit.entity.Player)
+
+    fun openToolSwapInventory(player: org.bukkit.entity.Player)
+
+    fun getFirstOwner(): String = getOwner()?.name ?: getOwnerUUID().toString()
+
+    fun getOwnershipHistory(): List<String> = listOf(getFirstOwner())
+
+    fun getOwnershipHistoryString(): String = getOwnershipHistory().joinToString(" -> ")
+
+    fun setOwnershipInfo(firstOwner: String, history: String) {}
 }

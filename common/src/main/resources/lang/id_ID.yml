@@ -1,0 +1,156 @@
+prefix: "<gradient:#00aaff:#00ccff>AxMinions</gradient> <gray>»</gray> "
+
+reload: "<green>Plugin berhasil dimuat ulang dalam <white><time></white>ms!"
+
+place:
+  success: "<green>Minion <type> baru berhasil dipasang! <gray>(<placed>/<max>)"
+  limit-reached: "<red>Tidak bisa memasang minion! Anda sudah mencapai batas! <gray>(<placed>/<max>)"
+  minion-at-location: "<red>Tidak bisa memasang minion! Sudah ada minion di lokasi itu!"
+  missing-permission: "<red>Anda tidak memiliki izin untuk memasang minion ini!"
+  island-limit-reached: "<red>Batas minion pulau telah tercapai! <gray>(<placed>/<max>)"
+
+pickup:
+  success: "<green>Minion berhasil diambil! <gray>(<placed>/<max>)"
+  with-tool: "<green>Minion diambil dengan alat tersimpan di dalamnya!"
+  without-tool: "<green>Minion diambil! Alat dikembalikan secara terpisah ke inventaris Anda."
+
+errors:
+  inventory-full: "<red>Inventaris Anda penuh! Kosongkan ruang terlebih dahulu!"
+  give-max-level: "<red>Level maksimum minion ini adalah <max_level>! Anda mencoba level <level>."
+
+convert:
+  start: "<green>Memulai konversi data..."
+  finish: "<green>Konversi data selesai dengan sukses!"
+
+warnings:
+  no-container: "<#FF3333>⚠ <#FFAAAA>Anda harus menautkan minion ke peti/wadah </#FFAAAA>⚠"
+  no-tool: "<#FF3333>⚠ <#FFAAAA>Minion membutuhkan alat </#FFAAAA>⚠"
+  no-water-nearby: "<#FF3333>⚠ <#FFAAAA>Minion membutuhkan air di dekatnya </#FFAAAA>⚠"
+  container-full: "<#FF3333>⚠ <#FFAAAA>Peti minion ini sudah penuh </#FFAAAA>⚠"
+  no-charge: "<#FF3333>⚠ <#FFAAAA>Daya minion habis! Isi ulang sekarang!</#FFAAAA>⚠"
+
+time:
+  day: "h"
+  hour: "j"
+  minute: "m"
+  second: "d"
+
+statistics: "<white>Minion aktif: <gradient:#00aaff:#00ccff><ticking></gradient>\n<white>Minion diam: <gradient:#00aaff:#00ccff><not-ticking></gradient>\n<white>Total: <gradient:#00aaff:#00ccff><total></gradient>"
+
+upgrades:
+  upgraded: "<green>Minion berhasil ditingkatkan ke level <white><level></white>!"
+  limit-reached: "<red>Minion ini sudah mencapai level maksimum!"
+  fail: "<red>Aksi minion atau uang Anda tidak cukup untuk peningkatan ini!"
+
+link:
+  success: "<green>Minion berhasil ditautkan ke wadah!"
+  unlink: "<green>Anda telah melepas tautan minion."
+  fail: "<red>Tidak bisa menautkan ke blok itu! Terlalu jauh atau bukan wadah!"
+  start: "<green>Penautan dimulai! Klik sebuah wadah!"
+
+levels:
+  '1': "<#33FF33>"
+  '2': "<#66FF00>"
+  '3': "<#AAFF00>"
+  '4': "<#FFFF00>"
+  '5': "<#FFCC00>"
+  '6': "<#FFAA00>"
+  '7': "<#FF8800>"
+  '8': "<#FF5500>"
+  '9': "<#FF3333>"
+  '10': "<#FF0000>"
+  '11': "<#FF33AA>"
+  '12': "<#DD44FF>"
+  '13': "<#AA55FF>"
+  '14': "<#6677FF>"
+  '15': "<#33AAFF>"
+  '16': "<#00DDFF>"
+  '17': "<#00FFCC>"
+  '18': "<#55FF88>"
+  '19': "<#FFEE33>"
+  '20': "<#FFD700>"
+
+menu:
+  mode-set: "<green>Mode menu minion Anda diubah ke <aqua><mode></aqua>!"
+  mode-bedrock: "<yellow>Anda bermain melalui Bedrock/Geyser — menu GUI klasik dipertahankan otomatis."
+  mode-old-client: "<yellow>Klien atau server Anda saat ini hanya menggunakan Menu Klasik (GUI)."
+
+skills:
+  upgraded: "<green>Anda meningkatkan <skill> <green>ke tier <white><tier>/<max_tier></white>!"
+  no-points: "<red>Poin tidak cukup! Dibutuhkan <white><cost></white>, tersedia <white><available></white>."
+  max-tier: "<yellow>Kemampuan ini sudah berada di tier maksimum!"
+  locked-level: "<red>Minion Anda perlu level <white><level></white> untuk membuka kekuatan ini!"
+  respec-success: "<green>Reset selesai! <white><points></white> poin dikembalikan."
+  respec-fail-money: "<red>Uang tidak cukup untuk reset poin! Biaya: <white><cost>$</white>."
+  nothing-to-respec: "<yellow>Minion ini belum memiliki poin yang diinvestasikan!"
+
+directions:
+  north: "Utara"
+  east: "Timur"
+  south: "Selatan"
+  west: "Barat"
+
+charge:
+  charge: "<green>Anda menambahkan <white>30 menit</white> daya ke minion!"
+  not-enough-money: "<red>Uang Anda tidak cukup untuk mengisi daya minion!"
+  not-enough-time-passed: "<red>Daya minion hampir penuh! Tunggu sebentar!"
+
+tools:
+  wrong-tool: "<red>Anda tidak bisa memasang item ini sebagai alat minion!"
+  stored-lore: "<gray>Alat tersimpan: <white><tool>"
+
+tool-names:
+  "none": "Tidak ada"
+  "wooden sword": "Pedang Kayu"
+  "wooden pickaxe": "Beliung Kayu"
+  "wooden axe": "Kapak Kayu"
+  "wooden hoe": "Cangkul Kayu"
+  "wooden shovel": "Sekop Kayu"
+  "copper sword": "Pedang Tembaga"
+  "copper pickaxe": "Beliung Tembaga"
+  "copper axe": "Kapak Tembaga"
+  "copper hoe": "Cangkul Tembaga"
+  "copper shovel": "Sekop Tembaga"
+  "stone sword": "Pedang Batu"
+  "stone pickaxe": "Beliung Batu"
+  "stone axe": "Kapak Batu"
+  "stone hoe": "Cangkul Batu"
+  "stone shovel": "Sekop Batu"
+  "iron sword": "Pedang Besi"
+  "iron pickaxe": "Beliung Besi"
+  "iron axe": "Kapak Besi"
+  "iron hoe": "Cangkul Besi"
+  "iron shovel": "Sekop Besi"
+  "golden sword": "Pedang Emas"
+  "golden pickaxe": "Beliung Emas"
+  "golden axe": "Kapak Emas"
+  "golden hoe": "Cangkul Emas"
+  "golden shovel": "Sekop Emas"
+  "diamond sword": "Pedang Berlian"
+  "diamond pickaxe": "Beliung Berlian"
+  "diamond axe": "Kapak Berlian"
+  "diamond hoe": "Cangkul Berlian"
+  "diamond shovel": "Sekop Berlian"
+  "netherite sword": "Pedang Netherite"
+  "netherite pickaxe": "Beliung Netherite"
+  "netherite axe": "Kapak Netherite"
+  "netherite hoe": "Cangkul Netherite"
+  "netherite shovel": "Sekop Netherite"
+  "fishing rod": "Pancingan"
+  "shears": "Gunting"
+  "ender eye": "Mata Ender"
+  "blaze rod": "Batang Blaze"
+  "bow": "Busur"
+  "crossbow": "Panah Silang"
+  "trident": "Trisula"
+  "mace": "Gada"
+  "stick": "Tongkat"
+
+reset: "<green>Anda telah mereset jumlah minion milik <player>!"
+not-on-island: "<#FF0000>Saat ini Anda tidak berada di pulau mana pun!"
+slot-give: "<green>Anda memberikan <amount> slot minion pulau kepada <player>!"
+slot-receive: "<green>Anda menerima <amount> slot minion pulau baru! (<from> -> <to>)"
+
+location-format: "<world>;<x>;<y>;<z>"
+
+config-version: 11

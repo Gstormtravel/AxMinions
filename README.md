@@ -10,7 +10,7 @@
 [![Minecraft](https://img.shields.io/badge/Minecraft%20%2F%20Paper-26.3-brightgreen?style=for-the-badge&logo=minecraft)](#)
 [![Java](https://img.shields.io/badge/Java-25-orange?style=for-the-badge&logo=openjdk)](#)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.21-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](#)
-[![Issues](https://img.shields.io/badge/Bug%20Reports-GitHub%20Issues-red?style=for-the-badge&logo=github)](https://github.com/Artillex-Studios/Issues)
+[![Reddit](https://img.shields.io/badge/Bug%20Reports-r%2FGSAxMinions-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/GSAxMinions/s/HU2wYpCD3N)
 [![Discord](https://img.shields.io/badge/Support-Discord-5865F2?style=for-the-badge&logo=discord)](https://dc.artillex-studios.com/)
 
 </div>

@@ -584,23 +584,6 @@ O `config.yml` agora define `language: pt_BR` como padrão e `config-version: 11
 
 ---
 
-# 🚀 Como Subir este Repositório como Fork no GitHub
-
-1. Verifique o estado limpo com `git status`.
-2. Crie um repositório no seu GitHub (ex: `Gstormtravel/AxMinions`).
-3. Troque/adicione o remote da sua fork e crie o commit da versão 26.3:
-
-```bash
-git remote rename origin upstream
-git remote add origin https://github.com/Gstormtravel/AxMinions.git
-git checkout -b mc-26.3-fork
-git add .
-git commit -m "Fork AxMinions 1.0.50-GS-DEFINITIVA (MC 26.3 + Skills + Dialog + HeroVender)"
-git push -u origin mc-26.3-fork
-```
-
----
-
 <div align="center">
   <sub><b>FIM DO DOCUMENTO — AXMINIONS 1.0.50-GS-DEFINITIVA (26.3)</b></sub>
 </div>
